@@ -33,14 +33,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(HttpBasicConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
-                .cors(Customizer.withDefaults())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/", "/swagger-ui/**", "/api-docs/**",
-                                        "/members/login", "/error").permitAll()
+                                        "/members/login").permitAll()
                                 .requestMatchers("/members/test").hasRole("USER")
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 /*.exceptionHandling(authenticationManager -> authenticationManager
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
