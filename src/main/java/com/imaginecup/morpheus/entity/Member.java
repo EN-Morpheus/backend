@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User implements UserDetails {
+public class Member implements UserDetails {
 
     @Id
     @Column(updatable = false, unique = true, nullable = false)

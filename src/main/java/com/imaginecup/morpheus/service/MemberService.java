@@ -1,6 +1,6 @@
 package com.imaginecup.morpheus.service;
 
-import com.imaginecup.morpheus.repository.UserRepository;
+import com.imaginecup.morpheus.repository.MemberRepository;
 import com.imaginecup.morpheus.token.JwtTokenProvider;
 import com.imaginecup.morpheus.token.TokenInfo;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
