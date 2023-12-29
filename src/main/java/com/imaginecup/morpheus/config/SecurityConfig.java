@@ -1,5 +1,7 @@
 package com.imaginecup.morpheus.config;
 
+import com.imaginecup.morpheus.token.JwtAccessDeniedHandler;
+import com.imaginecup.morpheus.token.JwtAuthenticationEntryPoint;
 import com.imaginecup.morpheus.token.JwtAuthenticationFilter;
 import com.imaginecup.morpheus.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +39,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/", "/swagger-ui/**", "/api-docs/**",
-                                        "/members/login").permitAll()
-                                .requestMatchers("/members/test").hasRole("USER")
+                                        "/members/**").permitAll()
+                                .requestMatchers("/test").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
-                /*.exceptionHandling(authenticationManager -> authenticationManager
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))*/
+                .exceptionHandling(authenticationManager -> authenticationManager
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
         return http.build();

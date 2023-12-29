@@ -3,12 +3,16 @@ package com.imaginecup.morpheus.service;
 import com.imaginecup.morpheus.entity.Member;
 import com.imaginecup.morpheus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +30,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // 해당하는 User 의 데이터가 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
-        return User.builder()
-                .username(member.getUsername())
-                .password(passwordEncoder.encode(member.getPassword()))
-                .roles(member.getRoles().toArray(new String[0]))
-                .build();
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
+
+        return new User(
+                String.valueOf(member.getMemberId()),
+                member.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
     }
 
 }

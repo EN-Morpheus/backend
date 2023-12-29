@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.entity;
 
+import com.imaginecup.morpheus.constant.Authority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member implements UserDetails {
+public class Member {
 
     @Id
     @Column(updatable = false, unique = true, nullable = false)
@@ -28,40 +29,13 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @Column(nullable = false)
+    private String email;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+    @Column(nullable = false)
+    private String name;
 
-    @Override
-    public String getUsername() {
-        return memberId;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
 }

@@ -1,11 +1,9 @@
-package com.imaginecup.morpheus.token;
+package com.imaginecup.morpheus.domain.response.token;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Builder
-@Data
+@Getter
 @AllArgsConstructor
 public class TokenInfo {
 
