@@ -6,6 +6,7 @@ import com.imaginecup.morpheus.member.service.MemberService;
 import com.imaginecup.morpheus.token.dto.request.ReissuedTokenDto;
 import com.imaginecup.morpheus.member.service.MemberServiceImpl;
 import com.imaginecup.morpheus.token.dto.response.TokenInfo;
+import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +59,22 @@ public class MemberController {
     @GetMapping("/duplicated-id")
     public ResponseEntity<Response> checkDuplication(@RequestParam("id") String id) {
         return memberService.checkDuplicatedId(id);
+    }
+
+    @Operation(summary = "로그아웃")
+    @DeleteMapping("/logout")
+    public ResponseEntity<Response> logout(@RequestParam("id") String id) {
+        Response response = new Response();
+        try {
+            memberService.logout(id);
+            response.of("result", "SUCCESS");
+            response.of("code", DetailResponse.builder().code(202).message("로그아웃되었습니다.").build());
+            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        } catch (RuntimeException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(404).message("유효하지 않은 ID입니다").build());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

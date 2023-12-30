@@ -2,14 +2,16 @@ package com.imaginecup.morpheus.utils.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@Builder
 public class Response {
 
     public Response() {
+        response = new HashMap<>();
     }
 
     public void of(String value1, Object value2) {

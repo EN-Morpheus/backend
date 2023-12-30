@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface MemberService {
 
-    public TokenInfo login(String memberId, String password);
-    public Response join(JoinDto joinDto);
-    public ResponseEntity<Response> checkDuplicatedId(String id);
-    public TokenInfo reissue(ReissuedTokenDto reissuedTokenDto);
+    TokenInfo login(String memberId, String password);
+    Response join(JoinDto joinDto);
+    ResponseEntity<Response> checkDuplicatedId(String id);
+    TokenInfo reissue(ReissuedTokenDto reissuedTokenDto);
+    void logout(String id);
+
+
 }
