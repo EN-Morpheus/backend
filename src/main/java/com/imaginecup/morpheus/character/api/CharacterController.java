@@ -1,9 +1,11 @@
 package com.imaginecup.morpheus.character.api;
 
 import com.imaginecup.morpheus.character.dto.request.CharacterInfoDto;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Character API", description = "캐릭터 추가, 수정, 삭제")
 public class CharacterController {
 
+    @Operation(summary = "캐릭터 생성")
+    @PostMapping("/add")
     public void addCharacter(@RequestBody CharacterInfoDto characterInfo) {
 
     }

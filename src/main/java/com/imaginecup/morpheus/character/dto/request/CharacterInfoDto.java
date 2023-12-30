@@ -9,5 +9,6 @@ public class CharacterInfoDto {
     private Long seed;
     private String prompt;
     private MultipartFile image;
+    private String name;
 
 }
