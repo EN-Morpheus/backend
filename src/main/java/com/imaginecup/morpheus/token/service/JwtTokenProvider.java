@@ -1,6 +1,6 @@
-package com.imaginecup.morpheus.token;
+package com.imaginecup.morpheus.token.service;
 
-import com.imaginecup.morpheus.domain.response.token.TokenInfo;
+import com.imaginecup.morpheus.token.dto.response.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

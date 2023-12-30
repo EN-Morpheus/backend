@@ -1,7 +1,7 @@
-package com.imaginecup.morpheus.service;
+package com.imaginecup.morpheus.member.service;
 
-import com.imaginecup.morpheus.entity.Member;
-import com.imaginecup.morpheus.repository.MemberRepository;
+import com.imaginecup.morpheus.member.domain.Member;
+import com.imaginecup.morpheus.member.dao.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

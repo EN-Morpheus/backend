@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.domain.request.token;
+package com.imaginecup.morpheus.token.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

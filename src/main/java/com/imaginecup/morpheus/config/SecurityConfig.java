@@ -1,13 +1,12 @@
 package com.imaginecup.morpheus.config;
 
-import com.imaginecup.morpheus.token.JwtAccessDeniedHandler;
-import com.imaginecup.morpheus.token.JwtAuthenticationEntryPoint;
-import com.imaginecup.morpheus.token.JwtAuthenticationFilter;
-import com.imaginecup.morpheus.token.JwtTokenProvider;
+import com.imaginecup.morpheus.token.service.JwtAccessDeniedHandler;
+import com.imaginecup.morpheus.token.service.JwtAuthenticationEntryPoint;
+import com.imaginecup.morpheus.token.service.JwtAuthenticationFilter;
+import com.imaginecup.morpheus.token.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,6 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(HttpBasicConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize

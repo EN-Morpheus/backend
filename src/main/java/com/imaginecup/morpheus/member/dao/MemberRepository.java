@@ -1,6 +1,6 @@
-package com.imaginecup.morpheus.repository;
+package com.imaginecup.morpheus.member.dao;
 
-import com.imaginecup.morpheus.entity.Member;
+import com.imaginecup.morpheus.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

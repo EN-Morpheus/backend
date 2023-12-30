@@ -1,21 +1,18 @@
-package com.imaginecup.morpheus.controller;
+package com.imaginecup.morpheus.member.api;
 
-import com.imaginecup.morpheus.domain.request.member.JoinDto;
-import com.imaginecup.morpheus.domain.request.member.LoginDto;
-import com.imaginecup.morpheus.domain.request.token.ReissuedTokenDto;
-import com.imaginecup.morpheus.domain.response.Response;
-import com.imaginecup.morpheus.service.MemberService;
-import com.imaginecup.morpheus.domain.response.token.TokenInfo;
+import com.imaginecup.morpheus.member.dto.request.JoinDto;
+import com.imaginecup.morpheus.member.dto.request.LoginDto;
+import com.imaginecup.morpheus.member.service.MemberService;
+import com.imaginecup.morpheus.token.dto.request.ReissuedTokenDto;
+import com.imaginecup.morpheus.member.service.MemberServiceImpl;
+import com.imaginecup.morpheus.token.dto.response.TokenInfo;
+import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,22 +24,22 @@ public class MemberController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody LoginDto loginDto) {
+    public Response login(@RequestBody LoginDto loginDto) {
         String memberId = loginDto.getMemberId();
         String password = loginDto.getPassword();
         TokenInfo tokenInfo = memberService.login(memberId, password);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("result", "SUCCESS");
-        response.put("token", tokenInfo);
+        Response response = new Response();
+        response.of("result", "SUCCESS");
+        response.of("token", tokenInfo);
 
         return response;
     }
 
     @Operation(summary = "회원 가입")
     @PostMapping("/join")
-    public ResponseEntity<Map<String, Object>> join(@RequestBody JoinDto joinDto) {
-        Map<String, Object> response = memberService.join(joinDto);
+    public ResponseEntity<Response> join(@RequestBody JoinDto joinDto) {
+        Response response = memberService.join(joinDto);
         return new ResponseEntity(response, HttpStatus.NO_CONTENT);
     }
 
@@ -57,8 +54,9 @@ public class MemberController {
         }
     }
 
+    @Operation(summary = "아이디 중복 확인")
     @GetMapping("/duplicated-id")
-    public ResponseEntity<Map<String, Object>> checkDuplication(@RequestParam("id") String id) {
+    public ResponseEntity<Response> checkDuplication(@RequestParam("id") String id) {
         return memberService.checkDuplicatedId(id);
     }
 

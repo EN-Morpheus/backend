@@ -1,6 +1,6 @@
-package com.imaginecup.morpheus.repository;
+package com.imaginecup.morpheus.token.dao;
 
-import com.imaginecup.morpheus.entity.RefreshToken;
+import com.imaginecup.morpheus.token.domain.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

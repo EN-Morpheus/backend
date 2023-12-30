@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.entity;
+package com.imaginecup.morpheus.token.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

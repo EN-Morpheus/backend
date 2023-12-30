@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.domain.request.member;
+package com.imaginecup.morpheus.member.dto.request;
 
 import lombok.Getter;
 

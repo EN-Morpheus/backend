@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.token;
+package com.imaginecup.morpheus.token.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

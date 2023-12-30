@@ -1,7 +1,7 @@
 package com.imaginecup.morpheus.config;
 
-import com.imaginecup.morpheus.token.JwtAuthenticationFilter;
-import com.imaginecup.morpheus.token.JwtTokenProvider;
+import com.imaginecup.morpheus.token.service.JwtAuthenticationFilter;
+import com.imaginecup.morpheus.token.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -1,15 +1,16 @@
-package com.imaginecup.morpheus.service;
+package com.imaginecup.morpheus.member.service;
 
-import com.imaginecup.morpheus.constant.Authority;
-import com.imaginecup.morpheus.domain.request.member.JoinDto;
-import com.imaginecup.morpheus.domain.request.token.ReissuedTokenDto;
-import com.imaginecup.morpheus.domain.response.Response;
-import com.imaginecup.morpheus.entity.Member;
-import com.imaginecup.morpheus.entity.RefreshToken;
-import com.imaginecup.morpheus.repository.MemberRepository;
-import com.imaginecup.morpheus.repository.RefreshTokenRepository;
-import com.imaginecup.morpheus.token.JwtTokenProvider;
-import com.imaginecup.morpheus.domain.response.token.TokenInfo;
+import com.imaginecup.morpheus.utils.constant.Authority;
+import com.imaginecup.morpheus.member.dto.request.JoinDto;
+import com.imaginecup.morpheus.token.dto.request.ReissuedTokenDto;
+import com.imaginecup.morpheus.utils.dto.DetailResponse;
+import com.imaginecup.morpheus.member.domain.Member;
+import com.imaginecup.morpheus.token.domain.RefreshToken;
+import com.imaginecup.morpheus.member.dao.MemberRepository;
+import com.imaginecup.morpheus.token.dao.RefreshTokenRepository;
+import com.imaginecup.morpheus.token.service.JwtTokenProvider;
+import com.imaginecup.morpheus.token.dto.response.TokenInfo;
+import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -56,12 +54,12 @@ public class MemberService {
         return tokenInfo;
     }
 
-    public Map<String, Object> join(JoinDto joinDto) {
-        Map<String, Object> response = new HashMap<>();
+    public Response join(JoinDto joinDto) {
+        Response response = new Response();
 
         if(!joinDto.getPassword().equals(joinDto.getPasswordChecked())) {
-            response.put("result", "FAIL");
-            response.put("code", Response.builder().code(404).message("비밀번호가 서로 일치하지 않습니다.").build());
+            response.of("result", "FAIL");
+            response.of("code", DetailResponse.builder().code(404).message("비밀번호가 서로 일치하지 않습니다.").build());
         }
 
         Member member = Member.builder()
@@ -74,22 +72,22 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        response.put("result", "SUCCESS");
-        response.put("code", Response.builder().code(204).message("회원 가입 성공").build());
+        response.of("result", "SUCCESS");
+        response.of("code", DetailResponse.builder().code(204).message("회원 가입 성공").build());
 
         return response;
     }
 
-    public ResponseEntity<Map<String, Object>> checkDuplicatedId(String id) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Response> checkDuplicatedId(String id) {
+        Response response= new Response();
 
         if (isDuplicatedId(id)) {
-            response.put("result", "FAIL");
-            response.put("error", Response.builder().code(404).message("ID 값이 중복됩니다.").build());
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(404).message("ID 값이 중복됩니다.").build());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-        response.put("result", "SUCCESS");
-        response.put("code", Response.builder().code(202).message("사용 가능한 ID입니다.").build());
+        response.of("result", "SUCCESS");
+        response.of("code", DetailResponse.builder().code(202).message("사용 가능한 ID입니다.").build());
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
@@ -105,10 +103,6 @@ public class MemberService {
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-
-        System.out.println(authentication.getName());
-        System.out.println(refreshToken.getValue());
-        System.out.println(reissuedTokenDto.getRefreshToken());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(reissuedTokenDto.getRefreshToken())) {
