@@ -20,15 +20,18 @@ public class Character {
     @Column(updatable = false, unique = true, nullable = false)
     private Long seed;
 
+    @Column(nullable = false)
     private String prompt;
 
 
     @JoinColumn
     @OneToOne(cascade = CascadeType.ALL)
+    @Column(nullable = false)
     private Picture picture;
 
     @JoinColumn
     @ManyToOne(cascade = CascadeType.ALL)
+    @Column(nullable = false)
     private Member member;
 
 }
