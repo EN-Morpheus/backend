@@ -14,4 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Character API", description = "캐릭터 추가, 수정, 삭제")
 public class CharacterController {
 
+    public void addCharacter(@RequestBody CharacterInfoDto characterInfo) {
+
+    }
+
 }
