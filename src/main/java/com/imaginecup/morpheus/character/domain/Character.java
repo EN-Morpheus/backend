@@ -23,14 +23,12 @@ public class Character {
     @Column(nullable = false)
     private String prompt;
 
-    @JoinColumn
+    @JoinColumn(nullable = false)
     @OneToOne(cascade = CascadeType.ALL)
-    @Column(nullable = false)
     private Picture picture;
 
-    @JoinColumn
+    @JoinColumn(nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
-    @Column(nullable = false)
     private Member member;
 
 }
