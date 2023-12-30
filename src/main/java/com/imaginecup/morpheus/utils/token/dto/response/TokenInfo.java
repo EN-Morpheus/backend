@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.token.dto.response;
+package com.imaginecup.morpheus.utils.token.dto.response;
 
 import lombok.*;
 

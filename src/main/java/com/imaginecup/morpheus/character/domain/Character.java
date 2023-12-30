@@ -23,7 +23,6 @@ public class Character {
     @Column(nullable = false)
     private String prompt;
 
-
     @JoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     @Column(nullable = false)

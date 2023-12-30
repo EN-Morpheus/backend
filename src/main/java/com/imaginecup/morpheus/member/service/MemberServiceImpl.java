@@ -2,14 +2,14 @@ package com.imaginecup.morpheus.member.service;
 
 import com.imaginecup.morpheus.utils.constant.Authority;
 import com.imaginecup.morpheus.member.dto.request.JoinDto;
-import com.imaginecup.morpheus.token.dto.request.ReissuedTokenDto;
+import com.imaginecup.morpheus.utils.token.dto.request.ReissuedTokenDto;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.member.domain.Member;
-import com.imaginecup.morpheus.token.domain.RefreshToken;
+import com.imaginecup.morpheus.utils.token.domain.RefreshToken;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
-import com.imaginecup.morpheus.token.dao.RefreshTokenRepository;
-import com.imaginecup.morpheus.token.service.JwtTokenProvider;
-import com.imaginecup.morpheus.token.dto.response.TokenInfo;
+import com.imaginecup.morpheus.utils.token.dao.RefreshTokenRepository;
+import com.imaginecup.morpheus.utils.token.service.JwtTokenProvider;
+import com.imaginecup.morpheus.utils.token.dto.response.TokenInfo;
 import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional

@@ -1,9 +1,9 @@
 package com.imaginecup.morpheus.config;
 
-import com.imaginecup.morpheus.token.service.JwtAccessDeniedHandler;
-import com.imaginecup.morpheus.token.service.JwtAuthenticationEntryPoint;
-import com.imaginecup.morpheus.token.service.JwtAuthenticationFilter;
-import com.imaginecup.morpheus.token.service.JwtTokenProvider;
+import com.imaginecup.morpheus.utils.token.service.JwtAccessDeniedHandler;
+import com.imaginecup.morpheus.utils.token.service.JwtAuthenticationEntryPoint;
+import com.imaginecup.morpheus.utils.token.service.JwtAuthenticationFilter;
+import com.imaginecup.morpheus.utils.token.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

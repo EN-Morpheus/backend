@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.token.service;
+package com.imaginecup.morpheus.utils.token.service;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
