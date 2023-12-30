@@ -7,8 +7,4 @@ public interface S3Service {
 
     Picture uploadMedia(MultipartFile media);
 
-    void deleteFile(String fileName);
-
-    String getFileExtension(String fileName);
-
 }
