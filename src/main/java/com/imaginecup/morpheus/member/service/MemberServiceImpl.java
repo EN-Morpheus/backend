@@ -117,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
         refreshTokenRepository.findByKey(id)
                 .ifPresentOrElse(
                         refreshTokenRepository::delete,
-                        () -> { throw new RuntimeException("Not a valid ID."); }
+                        () -> { throw new RuntimeException("유효한 ID가 아닙니다."); }
                 );
     }
 
