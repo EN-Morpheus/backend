@@ -2,7 +2,8 @@ package com.imaginecup.morpheus.character.service;
 
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
-import com.imaginecup.morpheus.character.dto.request.CharacterInfoDto;
+import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
+import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
 import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.picture.domain.Picture;
@@ -11,9 +12,13 @@ import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,28 +51,57 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Response addCharacter(CharacterInfoDto characterInfoDto) {
+    public Response addCharacter(CreadtedCharacter creadtedCharacter) {
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.uploadMedia(characterInfoDto.getImage());
+                            Picture image = s3Service.uploadMedia(creadtedCharacter.getImage());
 
                             Character character = Character.builder()
                                     .member(member)
                                     .picture(image)
-                                    .prompt(characterInfoDto.getPrompt())
-                                    .seed(characterInfoDto.getSeed())
+                                    .prompt(creadtedCharacter.getPrompt())
+                                    .seed(creadtedCharacter.getSeed())
                                     .build();
 
                             characterRepository.save(character);
                         },
-                        () -> { throw new RuntimeException("유효한 유저 정보가 아닙니다."); }
+                        () -> {
+                            throw new RuntimeException("유효한 유저 정보가 아닙니다.");
+                        }
                 );
         Response response = new Response();
         response.of("result", "SUCCESS");
         response.of("code", DetailResponse.builder().code(202).message("캐릭터 생성 완료").build());
 
         return response;
+    }
+
+    @Override
+    public ResponseEntity<Response> lookup() {
+        Response respone = new Response();
+        respone.of("result", "SUCCESS");
+
+        List<Character> characters = characterRepository.findByMemberMemberId(SecurityUtils.getCurrentMemberId());
+
+        if (characters.size() == 0) {
+            respone.of("error", DetailResponse.builder().code(202).message("조회 가능한 캐릭터가 없습니다.").build());
+            return new ResponseEntity<>(respone, HttpStatus.ACCEPTED);
+        }
+
+        List<CharacterInfo> characterList = new ArrayList<>();
+        for(Character character : characters) {
+            CharacterInfo characterInfo = CharacterInfo.builder()
+                    .image(character.getPicture().getUrl())
+                    .name(character.getName())
+                    .build();
+
+            characterList.add(characterInfo);
+        }
+
+        respone.of("code", characterList);
+
+        return new ResponseEntity<>(respone, HttpStatus.OK);
     }
 
 }

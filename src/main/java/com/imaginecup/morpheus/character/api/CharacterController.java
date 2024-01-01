@@ -1,7 +1,7 @@
 package com.imaginecup.morpheus.character.api;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.imaginecup.morpheus.character.dto.request.CharacterInfoDto;
+import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,12 +20,19 @@ public class CharacterController {
 
     private final CharacterService characterService;
 
+    @Operation(summary = "캐릭터 조회")
+    @GetMapping("/lookup")
+    public ResponseEntity lookup() {
+        return characterService.lookup();
+    }
+
+    @Operation(summary = "캐릭터 생성")
     @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity add(@RequestPart(value = "seed") Long seed,
                               @RequestPart(value = "prompt") String prompt,
                               @RequestPart(value = "name") String name,
                               @RequestPart(value = "image") MultipartFile image) {
-        CharacterInfoDto character = CharacterInfoDto.builder()
+        CreadtedCharacter character = CreadtedCharacter.builder()
                 .seed(seed)
                 .prompt(prompt)
                 .name(name)
@@ -44,6 +51,7 @@ public class CharacterController {
         }
     }
 
+    @Operation(summary = "캐릭터 방 추가")
     @PatchMapping("increase-character")
     public ResponseEntity increaseCountOfCharacter() {
         try {

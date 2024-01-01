@@ -31,4 +31,6 @@ public class Character {
     @ManyToOne(cascade = CascadeType.ALL)
     private Member member;
 
+    private String name;
+
 }

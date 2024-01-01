@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
-public class CharacterInfoDto {
+public class CreadtedCharacter {
 
     private Long seed;
     private String prompt;
