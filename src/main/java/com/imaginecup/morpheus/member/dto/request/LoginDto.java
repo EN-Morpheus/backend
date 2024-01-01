@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class LoginDto {
 
-    private String memberId;
+    private String id;
     private String password;
 
 }

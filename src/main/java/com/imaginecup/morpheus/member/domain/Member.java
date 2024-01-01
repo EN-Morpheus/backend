@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Table(name = "members")
 @Getter
@@ -30,5 +31,8 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @ColumnDefault("5")
+    private Long countOfCharacter;
 
 }

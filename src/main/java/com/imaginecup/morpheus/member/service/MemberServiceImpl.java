@@ -54,11 +54,6 @@ public class MemberServiceImpl implements MemberService {
     public Response join(JoinDto joinDto) {
         Response response = new Response();
 
-        if (!joinDto.getPassword().equals(joinDto.getPasswordChecked())) {
-            response.of("result", "FAIL");
-            response.of("code", DetailResponse.builder().code(404).message("비밀번호가 서로 일치하지 않습니다.").build());
-        }
-
         Member member = Member.builder().memberId(joinDto.getId()).password(passwordEncoder.encode(joinDto.getPassword())).name(joinDto.getName()).email(joinDto.getEmail()).authority(Authority.ROLE_USER).build();
 
         memberRepository.save(member);

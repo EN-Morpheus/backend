@@ -7,7 +7,6 @@ public class JoinDto {
 
     private String id;
     private String password;
-    private String passwordChecked;
     private String email;
     private String name;
 

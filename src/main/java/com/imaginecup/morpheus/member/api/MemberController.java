@@ -24,8 +24,8 @@ public class MemberController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    public Response login(@RequestBody LoginDto loginDto) {
-        String memberId = loginDto.getMemberId();
+    public ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
+        String memberId = loginDto.getId();
         String password = loginDto.getPassword();
         TokenInfo tokenInfo = memberService.login(memberId, password);
 
@@ -33,14 +33,14 @@ public class MemberController {
         response.of("result", "SUCCESS");
         response.of("token", tokenInfo);
 
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "회원 가입")
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody JoinDto joinDto) {
-        Response response = memberService.join(joinDto);
-        return new ResponseEntity(response, HttpStatus.NO_CONTENT);
+        Response response =  memberService.join(joinDto);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
     @Operation(summary = "토큰 재발급", description = "AccessToken 기간이 만료되었을 경우, 재발급해 주는 코드")
