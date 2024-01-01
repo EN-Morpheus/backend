@@ -1,9 +1,11 @@
 package com.imaginecup.morpheus.character.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@Builder
 public class CharacterInfoDto {
 
     private Long seed;
