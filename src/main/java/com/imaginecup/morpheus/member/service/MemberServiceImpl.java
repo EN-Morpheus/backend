@@ -32,6 +32,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Override
     public TokenInfo login(String memberId, String password) {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
@@ -51,6 +52,7 @@ public class MemberServiceImpl implements MemberService {
         return tokenInfo;
     }
 
+    @Override
     public Response join(JoinDto joinDto) {
         Response response = new Response();
 
@@ -64,19 +66,7 @@ public class MemberServiceImpl implements MemberService {
         return response;
     }
 
-    public ResponseEntity<Response> checkDuplicatedId(String id) {
-        Response response = new Response();
-
-        if (isDuplicatedId(id)) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message("ID 값이 중복됩니다.").build());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        response.of("result", "SUCCESS");
-        response.of("code", DetailResponse.builder().code(202).message("사용 가능한 ID입니다.").build());
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
-    }
-
+    @Override
     public TokenInfo reissue(ReissuedTokenDto reissuedTokenDto) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissuedTokenDto.getRefreshToken())) {
@@ -110,7 +100,9 @@ public class MemberServiceImpl implements MemberService {
         refreshTokenRepository.findByKey(id)
                 .ifPresentOrElse(
                         refreshTokenRepository::delete,
-                        () -> { throw new RuntimeException("유효한 ID가 아닙니다."); }
+                        () -> {
+                            throw new RuntimeException("유효한 ID가 아닙니다.");
+                        }
                 );
     }
 

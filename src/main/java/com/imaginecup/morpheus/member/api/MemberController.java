@@ -54,12 +54,6 @@ public class MemberController {
         }
     }
 
-    @Operation(summary = "아이디 중복 확인")
-    @GetMapping("/duplicated-id")
-    public ResponseEntity<Response> checkDuplication(@RequestParam("id") String id) {
-        return memberService.checkDuplicatedId(id);
-    }
-
     @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
     public ResponseEntity<Response> logout(@RequestParam("id") String id) {

@@ -1,16 +1,22 @@
 package com.imaginecup.morpheus.character.api;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
+import com.imaginecup.morpheus.character.dto.request.ChoosenCharacter;
 import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,12 +32,17 @@ public class CharacterController {
         return characterService.lookup();
     }
 
+    public ResponseEntity createImage(@RequestBody CharacterCreationForm characterCreationForm) {
+        return null;
+    }
+
     @Operation(summary = "캐릭터 생성")
-    @PostMapping(value = "/add", consumes = "multipart/form-data")
-    public ResponseEntity add(@RequestPart(value = "seed") Long seed,
-                              @RequestPart(value = "prompt") String prompt,
-                              @RequestPart(value = "name") String name,
-                              @RequestPart(value = "image") MultipartFile image) {
+    @PostMapping(value = "/add",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity add(@Valid @RequestParam("seed") Long seed,
+                              @Valid @RequestParam("prompt") String prompt,
+                              @Valid @RequestParam("name") String name,
+                              @Valid @RequestParam("image") MultipartFile image) {
         CreadtedCharacter character = CreadtedCharacter.builder()
                 .seed(seed)
                 .prompt(prompt)

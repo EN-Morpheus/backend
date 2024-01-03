@@ -20,6 +20,7 @@ public class Character {
     @Column(updatable = false, unique = true, nullable = false)
     private Long seed;
 
+    @Lob
     @Column(nullable = false)
     private String prompt;
 

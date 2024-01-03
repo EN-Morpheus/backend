@@ -19,6 +19,7 @@ public class Picture {
     private Long id;
 
     @Column(nullable = false)
+    @Lob
     private String url;
 
     @Column(nullable = false)

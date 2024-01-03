@@ -2,6 +2,7 @@ package com.imaginecup.morpheus.character.service;
 
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
+import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
 import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
@@ -55,7 +56,7 @@ public class CharacterServiceImpl implements CharacterService {
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.uploadMedia(creadtedCharacter.getImage());
+                            Picture image = s3Service.uploadMedia(creadtedCharacter.getImage(), creadtedCharacter.getName());
 
                             Character character = Character.builder()
                                     .member(member)
@@ -102,6 +103,12 @@ public class CharacterServiceImpl implements CharacterService {
         respone.of("code", characterList);
 
         return new ResponseEntity<>(respone, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Response> createImage(CharacterCreationForm characterCreationForm) {
+
+        return null;
     }
 
 }

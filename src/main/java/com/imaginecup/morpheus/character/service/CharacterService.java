@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.character.service;
 
+import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
 import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.utils.dto.Response;
@@ -14,5 +15,7 @@ public interface CharacterService {
     Response addCharacter(CreadtedCharacter creadtedCharacter);
 
     ResponseEntity<Response> lookup();
+
+    ResponseEntity<Response> createImage(CharacterCreationForm characterCreationForm);
 
 }

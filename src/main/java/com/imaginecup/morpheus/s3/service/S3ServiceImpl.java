@@ -27,14 +27,12 @@ public class S3ServiceImpl implements S3Service{
     private final PictureRepository pictureRepository;
 
     @Override
-    public Picture uploadMedia(MultipartFile photo) {
+    public Picture uploadMedia(MultipartFile photo, String name) {
         try {
-            String fileName = photo.getOriginalFilename();
-
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(photo.getContentType());
             metadata.setContentLength(photo.getSize());
-            amazonS3Client.putObject(bucket, fileName, photo.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, name, photo.getInputStream(), metadata);
         } catch (AmazonS3Exception e) {
             throw new AmazonS3Exception("S3에 저장하는 과정 중 문제가 발생했습니다.");
         } catch (IOException e) {
