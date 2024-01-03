@@ -25,4 +25,7 @@ public class Picture {
     @Column(nullable = false)
     private String originFileName;
 
+    @Column(nullable = false)
+    @Lob
+    private String thumbnailUrl;
 }

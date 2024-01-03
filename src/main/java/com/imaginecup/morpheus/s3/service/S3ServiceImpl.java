@@ -30,7 +30,8 @@ public class S3ServiceImpl implements S3Service{
     @Override
     public Picture uploadMedia(MultipartFile photo, String name) {
         try {
-            String fileName = String.format("%s's Character_%s", SecurityUtils.getCurrentMemberId(), name)
+            String fileName = String.format("%s's Character_%s", SecurityUtils.getCurrentMemberId(), name);
+
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(photo.getContentType());
             metadata.setContentLength(photo.getSize());
