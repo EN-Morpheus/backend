@@ -45,7 +45,11 @@ dependencies {
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
 
+	// thumbnail
 	implementation 'net.coobird:thumbnailator:0.4.8'
+
+	// chatGPT API
+	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
 }
 
 tasks.named('test') {

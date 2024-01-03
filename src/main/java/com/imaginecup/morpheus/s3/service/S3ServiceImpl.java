@@ -34,7 +34,7 @@ public class S3ServiceImpl implements S3Service{
     @Override
     public Picture getImage(MultipartFile photo, String name) {
         try {
-            String fileName = String.format("%s's Character_%s", SecurityUtils.getCurrentMemberId(), name);
+            String fileName = String.format("Character %s for %s", name, SecurityUtils.getCurrentMemberId());
             String thumbnailFileName = "thumbnail_" + fileName;
 
             uploadOriginImage(photo, fileName);
@@ -49,7 +49,7 @@ public class S3ServiceImpl implements S3Service{
             // 동시에 해당 미디어 파일들을 미디어 DB에 이름과 Url 정보 저장.
             // 게시글마다 어떤 미디어 파일들을 포함하고 있는지 파악하기 위함 또는 활용하기 위함.
             Picture uploadMedia = Picture.builder()
-                    .originFileName(photo.getOriginalFilename())
+                    .fileName(fileName)
                     .url(photoUrl)
                     .thumbnailUrl(thumbnailUrl)
                     .build();
@@ -82,6 +82,7 @@ public class S3ServiceImpl implements S3Service{
         ObjectMetadata thumbMetadata = new ObjectMetadata();
         thumbMetadata.setContentType(picture.getContentType());
         thumbMetadata.setContentLength(thumbnailBytes.length);
+
         amazonS3Client.putObject(bucket, fileName, is, thumbMetadata);
     }
 }

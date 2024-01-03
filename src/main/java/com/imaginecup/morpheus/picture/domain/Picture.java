@@ -23,7 +23,7 @@ public class Picture {
     private String url;
 
     @Column(nullable = false)
-    private String originFileName;
+    private String fileName;
 
     @Column(nullable = false)
     @Lob
