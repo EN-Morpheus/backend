@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.imaginecup.morpheus.picture.dao.PictureRepository;
 import com.imaginecup.morpheus.picture.domain.Picture;
+import com.imaginecup.morpheus.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,11 @@ public class S3ServiceImpl implements S3Service{
     @Override
     public Picture uploadMedia(MultipartFile photo, String name) {
         try {
+            String fileName = String.format("%s's Character_%s", SecurityUtils.getCurrentMemberId(), name)
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(photo.getContentType());
             metadata.setContentLength(photo.getSize());
-            amazonS3Client.putObject(bucket, name, photo.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, fileName, photo.getInputStream(), metadata);
         } catch (AmazonS3Exception e) {
             throw new AmazonS3Exception("S3에 저장하는 과정 중 문제가 발생했습니다.");
         } catch (IOException e) {
