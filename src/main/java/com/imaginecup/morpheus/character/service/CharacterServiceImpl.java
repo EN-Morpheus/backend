@@ -56,7 +56,7 @@ public class CharacterServiceImpl implements CharacterService {
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.uploadMedia(creadtedCharacter.getImage(), creadtedCharacter.getName());
+                            Picture image = s3Service.getImage(creadtedCharacter.getImage(), creadtedCharacter.getName());
 
                             Character character = Character.builder()
                                     .member(member)

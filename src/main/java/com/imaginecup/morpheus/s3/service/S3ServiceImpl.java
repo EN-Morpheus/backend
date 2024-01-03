@@ -32,28 +32,13 @@ public class S3ServiceImpl implements S3Service{
     private final PictureRepository pictureRepository;
 
     @Override
-    public Picture uploadMedia(MultipartFile photo, String name) {
+    public Picture getImage(MultipartFile photo, String name) {
         try {
             String fileName = String.format("%s's Character_%s", SecurityUtils.getCurrentMemberId(), name);
-
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(photo.getContentType());
-            metadata.setContentLength(photo.getSize());
-
-            // 이미지 원본 저장
-            amazonS3Client.putObject(bucket, fileName, photo.getInputStream(), metadata);
-
-            // 썸네일 생성
             String thumbnailFileName = "thumbnail_" + fileName;
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            Thumbnails.of(photo.getInputStream()).size(100, 100).toOutputStream(os);
-            byte[] thumbnailBytes = os.toByteArray();
-            InputStream is = new ByteArrayInputStream(thumbnailBytes);
 
-            ObjectMetadata thumbMetadata = new ObjectMetadata();
-            metadata.setContentType(photo.getContentType());
-            metadata.setContentLength(thumbnailBytes.length);
-            amazonS3Client.putObject(bucket, thumbnailFileName, is, thumbMetadata);
+            uploadOriginImage(photo, fileName);
+            uploadThumbnailImage(photo, thumbnailFileName);
 
             // 접근가능한 원본 URL 가져오기
             String photoUrl = amazonS3.getUrl(bucket, photo.getOriginalFilename()).toString();
@@ -79,6 +64,24 @@ public class S3ServiceImpl implements S3Service{
         }
     }
 
+    private void uploadOriginImage(MultipartFile picture, String fileName) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(picture.getContentType());
+        metadata.setContentLength(picture.getSize());
 
+        // 이미지 원본 저장
+        amazonS3Client.putObject(bucket, fileName, picture.getInputStream(), metadata);
+    }
 
+    private void uploadThumbnailImage(MultipartFile picture, String fileName ) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Thumbnails.of(picture.getInputStream()).size(100, 100).toOutputStream(os);
+        byte[] thumbnailBytes = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(thumbnailBytes);
+
+        ObjectMetadata thumbMetadata = new ObjectMetadata();
+        thumbMetadata.setContentType(picture.getContentType());
+        thumbMetadata.setContentLength(thumbnailBytes.length);
+        amazonS3Client.putObject(bucket, fileName, is, thumbMetadata);
+    }
 }

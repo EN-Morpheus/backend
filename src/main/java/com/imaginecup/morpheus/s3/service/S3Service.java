@@ -5,6 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface S3Service {
 
-    Picture uploadMedia(MultipartFile media, String name);
+    Picture getImage(MultipartFile media, String name);
 
 }
