@@ -44,6 +44,8 @@ dependencies {
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+
+	implementation 'net.coobird:thumbnailator:0.4.8'
 }
 
 tasks.named('test') {

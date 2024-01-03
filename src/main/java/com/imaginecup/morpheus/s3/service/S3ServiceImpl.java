@@ -8,12 +8,16 @@ import com.imaginecup.morpheus.picture.dao.PictureRepository;
 import com.imaginecup.morpheus.picture.domain.Picture;
 import com.imaginecup.morpheus.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @RequiredArgsConstructor
 @Transactional
@@ -35,26 +39,46 @@ public class S3ServiceImpl implements S3Service{
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(photo.getContentType());
             metadata.setContentLength(photo.getSize());
+
+            // 이미지 원본 저장
             amazonS3Client.putObject(bucket, fileName, photo.getInputStream(), metadata);
+
+            // 썸네일 생성
+            String thumbnailFileName = "thumbnail_" + fileName;
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            Thumbnails.of(photo.getInputStream()).size(100, 100).toOutputStream(os);
+            byte[] thumbnailBytes = os.toByteArray();
+            InputStream is = new ByteArrayInputStream(thumbnailBytes);
+
+            ObjectMetadata thumbMetadata = new ObjectMetadata();
+            metadata.setContentType(photo.getContentType());
+            metadata.setContentLength(thumbnailBytes.length);
+            amazonS3Client.putObject(bucket, thumbnailFileName, is, thumbMetadata);
+
+            // 접근가능한 원본 URL 가져오기
+            String photoUrl = amazonS3.getUrl(bucket, photo.getOriginalFilename()).toString();
+
+            // 접근가능한 썸네일 URL 가져오기
+            String thumbnailUrl = amazonS3.getUrl(bucket, thumbnailFileName).toString();
+
+            // 동시에 해당 미디어 파일들을 미디어 DB에 이름과 Url 정보 저장.
+            // 게시글마다 어떤 미디어 파일들을 포함하고 있는지 파악하기 위함 또는 활용하기 위함.
+            Picture uploadMedia = Picture.builder()
+                    .originFileName(photo.getOriginalFilename())
+                    .url(photoUrl)
+                    .thumbnailUrl(thumbnailUrl)
+                    .build();
+
+            pictureRepository.save(uploadMedia);
+
+            return uploadMedia;
         } catch (AmazonS3Exception e) {
             throw new AmazonS3Exception("S3에 저장하는 과정 중 문제가 발생했습니다.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // 접근가능한 URL 가져오기
-        String photoUrl = amazonS3.getUrl(bucket, photo.getOriginalFilename()).toString();
-
-        // 동시에 해당 미디어 파일들을 미디어 DB에 이름과 Url 정보 저장.
-        // 게시글마다 어떤 미디어 파일들을 포함하고 있는지 파악하기 위함 또는 활용하기 위함.
-        Picture uploadMedia = Picture.builder()
-                .originFileName(photo.getOriginalFilename())
-                .url(photoUrl)
-                .build();
-
-        pictureRepository.save(uploadMedia);
-
-        return uploadMedia;
     }
+
+
 
 }
