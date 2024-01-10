@@ -40,7 +40,6 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/", "/swagger-ui/**", "/api-docs/**",
                                         "/members/**").permitAll()
-                                .requestMatchers("/test").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(authenticationManager -> authenticationManager
