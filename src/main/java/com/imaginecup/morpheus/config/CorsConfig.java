@@ -23,9 +23,16 @@ public class CorsConfig {
 
         CorsConfiguration memberConfig = new CorsConfiguration();
         memberConfig.setAllowCredentials(true);
-        memberConfig.addAllowedOrigin("http://localhost:3000");
+        memberConfig.addAllowedOrigin("http://localhost:3000/**");
         memberConfig.addAllowedHeader("*");
         memberConfig.setAllowedMethods(Arrays.asList("GET", "POST"));
+
+        CorsConfiguration characterConfig = new CorsConfiguration();
+        characterConfig.setAllowCredentials(true);
+        characterConfig.addAllowedOrigin("http://localhost:3000/**");
+        characterConfig.addAllowedHeader("Content-Type");
+        characterConfig.addAllowedHeader("Authorization");
+        characterConfig.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH"));
 
         source.registerCorsConfiguration("*", config);
         return new CorsFilter(source);
