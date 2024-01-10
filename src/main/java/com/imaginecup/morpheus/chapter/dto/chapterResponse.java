@@ -18,6 +18,6 @@ public class chapterResponse {
 
     private int order;
 
-    private Picture image;
+    private String imageUrl;
 
 }
