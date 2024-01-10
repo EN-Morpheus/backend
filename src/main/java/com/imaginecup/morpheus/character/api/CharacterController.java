@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/character")
-@Tag(name = "Character API", description = "캐릭터 조회, 추가, 수정, 삭제, 창 늘리기")
+@Tag(name = "Character API", description = "캐릭터 조회, 추가, 삭제, 창 늘리기")
 public class CharacterController {
 
     private final CharacterService characterService;

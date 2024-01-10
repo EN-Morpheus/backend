@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.dalle3.dto.request;
+package com.imaginecup.morpheus.openai.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -4,7 +4,7 @@ import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
 import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
 import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
-import com.imaginecup.morpheus.dalle3.service.Delle3Service;
+import com.imaginecup.morpheus.openai.service.OpenaiService;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
 import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.picture.domain.Picture;
@@ -33,7 +33,7 @@ public class CharacterServiceImpl implements CharacterService {
     private final MemberRepository memberRepository;
     private final S3Service s3Service;
     private final CharacterRepository characterRepository;
-    private final Delle3Service delle3Service;
+    private final OpenaiService openaiService;
 
     @Override
     public void increaseCharacterRoom() {
@@ -116,7 +116,7 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
-        String imageBody = delle3Service.generatePicture(prompt);
+        String imageBody = openaiService.generatePicture(prompt);
         System.out.println(imageBody);
         JSONObject imageData = Parser.extractDataFromResponse(imageBody);
         System.out.println(imageData.toString());
