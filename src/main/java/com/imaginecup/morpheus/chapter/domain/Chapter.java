@@ -31,6 +31,9 @@ public class Chapter {
     @Column(nullable = false)
     private String narrativeText;
 
+    @Column(nullable = false)
+    private int order;
+
     @OneToOne
     @JoinColumn(name = "picture_id")
     private Picture image;
