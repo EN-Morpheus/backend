@@ -34,6 +34,12 @@ public class CorsConfig {
         characterConfig.addAllowedHeader("Authorization");
         characterConfig.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH"));
 
+        CorsConfiguration fairyConfig = new CorsConfiguration();
+        fairyConfig.setAllowCredentials(true);
+        fairyConfig.addAllowedOrigin("http://localhost:3000/**");
+        fairyConfig.addAllowedHeader("Authorization");
+        fairyConfig.setAllowedMethods(Arrays.asList("GET", "POST"));
+
         source.registerCorsConfiguration("*", config);
         return new CorsFilter(source);
     }
