@@ -5,6 +5,7 @@ import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.Parser;
+import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,20 @@ public class CharacterController {
     @Operation(summary = "캐릭터 삭제")
     @DeleteMapping("/delete")
     public ResponseEntity delete(@RequestParam("id") Long characterId) {
-        return characterService.deleteCharacter(characterId);
+        Response response = new Response();
+        try {
+            characterService.deleteCharacter(characterId);
+
+            response.of("result", "SUCCESS");
+            response.of("code", DetailResponse.builder().code(202).message("캐릭터가 삭제되었습니다.").build());
+
+            return new ResponseEntity(response, HttpStatus.NO_CONTENT);
+        } catch (RuntimeException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "캐릭터 선택", description = "동화 생성 중, 동화 주인공을 선택할 때 사용")

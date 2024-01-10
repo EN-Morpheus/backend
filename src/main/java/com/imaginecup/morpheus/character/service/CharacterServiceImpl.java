@@ -100,7 +100,7 @@ public class CharacterServiceImpl implements CharacterService {
         }
 
         List<CharacterInfo> characterList = new ArrayList<>();
-        for(Character character : characters) {
+        for (Character character : characters) {
             CharacterInfo characterInfo = CharacterInfo.builder()
                     .image(character.getPicture().getUrl())
                     .name(character.getName())
@@ -118,9 +118,7 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
         String imageBody = openaiService.generatePicture(prompt);
-        System.out.println(imageBody);
         JSONObject imageData = Parser.extractDataFromResponse(imageBody);
-        System.out.println(imageData.toString());
 
         Map<String, Object> imageDataMap = new HashMap<>();
         JSONArray dataArray = imageData.getJSONArray("data");
@@ -131,6 +129,28 @@ public class CharacterServiceImpl implements CharacterService {
         response.of("image url", imageDataMap);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public void deleteCharacter(Long characterId) {
+        characterRepository.findById(characterId)
+                .ifPresentOrElse(
+                        character -> {
+                            if (character.getMember().getMemberId().equals(SecurityUtils.getCurrentMemberId())) {
+                                characterRepository.delete(character);
+                            } else {
+                                throw new RuntimeException("로그인 중인 유저의 캐릭터 ID가 아닙니다.");
+                            }
+                        },
+                        () -> {
+                            throw new RuntimeException("유효한 캐릭터 ID가 아닙니다.");
+                        }
+                );
+    }
+
+    @Override
+    public ResponseEntity<Response> pickCharacter(Long characterId) {
+        return null;
     }
 
 }
