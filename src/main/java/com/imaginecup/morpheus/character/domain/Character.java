@@ -17,12 +17,17 @@ import lombok.NoArgsConstructor;
 public class Character {
 
     @Id
+    @GeneratedValue
     @Column(updatable = false, unique = true, nullable = false)
-    private Long seed;
+    private Long id;
 
     @Lob
     @Column(nullable = false)
     private String prompt;
+
+    @Lob
+    @Column(nullable = false)
+    private String revisedPrompt;
 
     @JoinColumn(nullable = false)
     @OneToOne(cascade = CascadeType.ALL)

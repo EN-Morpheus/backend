@@ -16,6 +16,6 @@ public interface CharacterService {
 
     ResponseEntity<Response> lookup();
 
-    ResponseEntity<Response> createImage(CharacterCreationForm characterCreationForm);
+    ResponseEntity<Response> createImage(String prompt);
 
 }

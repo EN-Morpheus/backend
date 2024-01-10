@@ -5,6 +5,7 @@ import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.character.dto.request.ChoosenCharacter;
 import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
 import com.imaginecup.morpheus.character.service.CharacterService;
+import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +33,11 @@ public class CharacterController {
         return characterService.lookup();
     }
 
+    @Operation(summary = "캐릭터 제안 이미지 생성")
+    @PostMapping("/create")
     public ResponseEntity createImage(@RequestBody CharacterCreationForm characterCreationForm) {
-        return null;
+        String prompt = Parser.parseCharacterPrompt(characterCreationForm);
+        return characterService.createImage(prompt);
     }
 
     @Operation(summary = "캐릭터 생성")
