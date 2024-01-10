@@ -12,7 +12,6 @@ public class Parser {
                 characterCreationForm.getAppearance(),
                 characterCreationForm.getPersonality());
 
-        System.out.println(prompt);
         return prompt;
     }
 
