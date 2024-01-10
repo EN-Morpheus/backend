@@ -150,7 +150,20 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public CharacterInfo pickCharacter(Long characterId) {
-        return null;
+        Optional<Character> character = characterRepository.findById(characterId);
+        CharacterInfo characterInfo;
+
+        if (character.isPresent()) {
+            characterInfo = CharacterInfo.builder()
+                    .id(character.get().getId())
+                    .name(character.get().getName())
+                    .image(character.get().getPicture().getUrl())
+                    .build();
+        } else {
+            throw new RuntimeException("유효한 캐릭터의 ID가 아닙니다.");
+        }
+
+        return characterInfo;
     }
 
 }
