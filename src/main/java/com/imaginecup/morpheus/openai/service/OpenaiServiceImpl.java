@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.openai.service;
 
+import com.imaginecup.morpheus.utils.constant.Endpoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -22,8 +23,6 @@ import java.util.Map;
 public class OpenaiServiceImpl implements OpenaiService {
 
     private final RestTemplate restTemplate;
-    private final String DALLE_API_URL = "https://api.openai.com/v1/images/generations";
-    private final String GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 
     @Value("${openai.key}")
     private String OPEN_AI_KEY;
@@ -35,12 +34,11 @@ public class OpenaiServiceImpl implements OpenaiService {
 
         requestBody.put("prompt", prompt);
         requestBody.put("model", "dall-e-3");
-        requestBody.put("n", 1);
         requestBody.put("size", "1024x1024");
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<String> response = getResponse(DALLE_API_URL, request);
+        ResponseEntity<String> response = getResponse(Endpoint.DALLE_API_URL.getUrl(), request);
         return response.getBody();
     }
 
@@ -58,7 +56,7 @@ public class OpenaiServiceImpl implements OpenaiService {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<String> response = getResponse(GPT_API_URL, request);
+        ResponseEntity<String> response = getResponse(Endpoint.GPT_API_URL.getUrl(), request);
         return response.getBody();
     }
 
