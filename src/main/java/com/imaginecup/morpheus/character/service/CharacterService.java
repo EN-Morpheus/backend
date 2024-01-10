@@ -1,6 +1,7 @@
 package com.imaginecup.morpheus.character.service;
 
 import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
+import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.utils.dto.Response;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +17,6 @@ public interface CharacterService {
 
     void deleteCharacter(Long characterId);
 
-    ResponseEntity<Response> pickCharacter(Long characterId);
+    CharacterInfo pickCharacter(Long characterId);
 
 }

@@ -3,6 +3,7 @@ package com.imaginecup.morpheus.character.api;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
+import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
@@ -52,7 +53,20 @@ public class CharacterController {
     @Operation(summary = "캐릭터 선택", description = "동화 생성 중, 동화 주인공을 선택할 때 사용")
     @GetMapping("/pick")
     public ResponseEntity pick(@RequestParam("id") Long characterId) {
-        return characterService.pickCharacter(characterId);
+        Response response = new Response();
+        try {
+            CharacterInfo character = characterService.pickCharacter(characterId);
+
+            response.of("result", "SUCCESS");
+            response.of("code", character);
+
+            return new ResponseEntity(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "캐릭터 제안 이미지 생성")

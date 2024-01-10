@@ -149,7 +149,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public ResponseEntity<Response> pickCharacter(Long characterId) {
+    public CharacterInfo pickCharacter(Long characterId) {
         return null;
     }
 
