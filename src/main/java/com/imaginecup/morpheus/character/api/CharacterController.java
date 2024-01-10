@@ -23,10 +23,22 @@ public class CharacterController {
 
     private final CharacterService characterService;
 
-    @Operation(summary = "캐릭터 조회")
-    @GetMapping("/lookup")
+    @Operation(summary = "캐릭터 조회", description = "마이페이지에서의 캐릭터 조회, 동화 생성 중, 캐릭터 조회할 때 사용")
+    @GetMapping("/list")
     public ResponseEntity lookup() {
         return characterService.lookup();
+    }
+
+    @Operation(summary = "캐릭터 삭제")
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@RequestParam("id") Long characterId) {
+        return characterService.deleteCharacter(characterId);
+    }
+
+    @Operation(summary = "캐릭터 선택", description = "동화 생성 중, 동화 주인공을 선택할 때 사용")
+    @GetMapping("/pick")
+    public ResponseEntity pick(@RequestParam("id") Long characterId) {
+        return characterService.pickCharacter(characterId);
     }
 
     @Operation(summary = "캐릭터 제안 이미지 생성")

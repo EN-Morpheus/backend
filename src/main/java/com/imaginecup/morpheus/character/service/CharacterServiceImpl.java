@@ -104,6 +104,7 @@ public class CharacterServiceImpl implements CharacterService {
             CharacterInfo characterInfo = CharacterInfo.builder()
                     .image(character.getPicture().getUrl())
                     .name(character.getName())
+                    .id(character.getId())
                     .build();
 
             characterList.add(characterInfo);

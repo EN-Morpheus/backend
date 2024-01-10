@@ -14,4 +14,8 @@ public interface CharacterService {
 
     ResponseEntity<Response> createImage(String prompt);
 
+    ResponseEntity<Response> deleteCharacter(Long characterId);
+
+    ResponseEntity<Response> pickCharacter(Long characterId);
+
 }

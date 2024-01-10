@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class CharacterInfo {
 
+    private Long id;
     private String image;
     private String name;
 
