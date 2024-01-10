@@ -21,12 +21,21 @@ public class CorsConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
+        source.registerCorsConfiguration("*", config);
+        return new CorsFilter(source);
+    }
+
+    private CorsConfiguration setMemberCors() {
         CorsConfiguration memberConfig = new CorsConfiguration();
         memberConfig.setAllowCredentials(true);
         memberConfig.addAllowedOrigin("http://localhost:3000/**");
         memberConfig.addAllowedHeader("*");
         memberConfig.setAllowedMethods(Arrays.asList("GET", "POST"));
 
+        return memberConfig;
+    }
+
+    private CorsConfiguration setCharacterCors() {
         CorsConfiguration characterConfig = new CorsConfiguration();
         characterConfig.setAllowCredentials(true);
         characterConfig.addAllowedOrigin("http://localhost:3000/**");
@@ -34,13 +43,16 @@ public class CorsConfig {
         characterConfig.addAllowedHeader("Authorization");
         characterConfig.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH"));
 
+        return characterConfig;
+    }
+
+    private CorsConfiguration setFairyCors() {
         CorsConfiguration fairyConfig = new CorsConfiguration();
         fairyConfig.setAllowCredentials(true);
         fairyConfig.addAllowedOrigin("http://localhost:3000/**");
         fairyConfig.addAllowedHeader("Authorization");
         fairyConfig.setAllowedMethods(Arrays.asList("GET", "POST"));
 
-        source.registerCorsConfiguration("*", config);
-        return new CorsFilter(source);
+        return fairyConfig;
     }
 }
