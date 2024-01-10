@@ -85,4 +85,5 @@ public class S3ServiceImpl implements S3Service{
 
         amazonS3Client.putObject(bucket, fileName, is, thumbMetadata);
     }
+
 }

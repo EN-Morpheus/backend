@@ -1,4 +1,6 @@
-package com.imaginecup.morpheus.delle3.service;
+package com.imaginecup.morpheus.dalle3.service;
+
+
 
 public interface Delle3Service {
 

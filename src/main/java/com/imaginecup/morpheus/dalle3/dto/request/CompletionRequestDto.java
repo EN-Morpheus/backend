@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.delle3.dto.request;
+package com.imaginecup.morpheus.dalle3.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

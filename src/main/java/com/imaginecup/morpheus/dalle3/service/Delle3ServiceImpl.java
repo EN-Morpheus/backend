@@ -1,6 +1,5 @@
-package com.imaginecup.morpheus.delle3.service;
+package com.imaginecup.morpheus.dalle3.service;
 
-import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

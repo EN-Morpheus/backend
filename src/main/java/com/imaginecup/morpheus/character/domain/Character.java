@@ -29,6 +29,15 @@ public class Character {
     @Column(nullable = false)
     private String revisedPrompt;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String personality;
+
+    @Column(nullable = false)
+    private String introduction;
+
     @JoinColumn(nullable = false)
     @OneToOne(cascade = CascadeType.ALL)
     private Picture picture;
@@ -36,7 +45,5 @@ public class Character {
     @JoinColumn(nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
     private Member member;
-
-    private String name;
 
 }

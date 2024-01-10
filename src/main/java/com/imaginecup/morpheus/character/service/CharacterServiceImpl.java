@@ -2,25 +2,28 @@ package com.imaginecup.morpheus.character.service;
 
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
-import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
+import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
 import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
-import com.imaginecup.morpheus.delle3.service.Delle3Service;
+import com.imaginecup.morpheus.dalle3.service.Delle3Service;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
 import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.picture.domain.Picture;
 import com.imaginecup.morpheus.s3.service.S3Service;
+import com.imaginecup.morpheus.utils.ImageSaver;
+import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -53,16 +56,22 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Response addCharacter(CreadtedCharacter creadtedCharacter) {
+    public Response addCharacter(SavedCharacter savedCharacter) throws Exception {
+        MultipartFile imageFile = ImageSaver.downloadImageAsMultipartFile(savedCharacter.getImageUrl());
+
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.getImage(creadtedCharacter.getImage(), creadtedCharacter.getName());
+                            Picture image = s3Service.getImage(imageFile, savedCharacter.getName());
 
                             Character character = Character.builder()
                                     .member(member)
                                     .picture(image)
-                                    .prompt(creadtedCharacter.getPrompt())
+                                    .introduction(savedCharacter.getCharacterCreationForm().getIntroduction())
+                                    .personality(savedCharacter.getCharacterCreationForm().getPersonality())
+                                    .revisedPrompt(savedCharacter.getRevisedPrompt())
+                                    .name(savedCharacter.getName())
+                                    .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
                                     .build();
 
                             characterRepository.save(character);
@@ -107,10 +116,18 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
-        String imageUrl = delle3Service.generatePicture(prompt);
+        String imageBody = delle3Service.generatePicture(prompt);
+        System.out.println(imageBody);
+        JSONObject imageData = Parser.extractDataFromResponse(imageBody);
+        System.out.println(imageData.toString());
+
+        Map<String, Object> imageDataMap = new HashMap<>();
+        JSONArray dataArray = imageData.getJSONArray("data");
+        imageDataMap.put("data", dataArray.toList());
+
         Response response = new Response();
         response.of("result", "SUCCESS");
-        response.of("image url", imageUrl);
+        response.of("image url", imageDataMap);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

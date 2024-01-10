@@ -50,6 +50,13 @@ dependencies {
 
 	// chatGPT API
 	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
+
+	// JSON 라이브러리
+	implementation 'org.json:json:20210307'
+
+	implementation 'org.springframework:spring-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 tasks.named('test') {

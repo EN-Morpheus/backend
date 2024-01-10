@@ -2,22 +2,18 @@ package com.imaginecup.morpheus.character.api;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
-import com.imaginecup.morpheus.character.dto.request.ChoosenCharacter;
-import com.imaginecup.morpheus.character.dto.request.CreadtedCharacter;
+import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,24 +32,14 @@ public class CharacterController {
     @Operation(summary = "캐릭터 제안 이미지 생성")
     @PostMapping("/create")
     public ResponseEntity createImage(@RequestBody CharacterCreationForm characterCreationForm) {
-        String prompt = Parser.parseCharacterPrompt(characterCreationForm);
+        String prompt = Parser.parseSaveCharacterPrompt(characterCreationForm);
         return characterService.createImage(prompt);
     }
 
     @Operation(summary = "캐릭터 생성")
     @PostMapping(value = "/add",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity add(@Valid @RequestParam("seed") Long seed,
-                              @Valid @RequestParam("prompt") String prompt,
-                              @Valid @RequestParam("name") String name,
-                              @Valid @RequestParam("image") MultipartFile image) {
-        CreadtedCharacter character = CreadtedCharacter.builder()
-                .seed(seed)
-                .prompt(prompt)
-                .name(name)
-                .image(image)
-                .build();
-
+    public ResponseEntity add(@RequestBody SavedCharacter character) {
         try {
             Response response = characterService.addCharacter(character);
             return new ResponseEntity(response, HttpStatus.OK);
