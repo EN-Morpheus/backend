@@ -23,7 +23,7 @@ public class FairyController {
     private final FairyService fairyService;
 
     @Operation(summary = "랜덤 주제 조회")
-    @GetMapping("/topic/random")
+    @GetMapping("/topic-random")
     public ResponseEntity lookupRandomTopics() {
         List<String> topics = fairyService.getRandomTopics();
         Response response = new Response();
@@ -33,6 +33,8 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "주제 가공")
+    @GetMapping("/topic-manufacture")
     public ResponseEntity ManufactureTopic(@RequestParam("topic") String topic) {
         String manufacturedTopic = fairyService.getManufacturedTopic(topic)
         Response response = new Response();
