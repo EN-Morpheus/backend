@@ -60,5 +60,11 @@ public class FairyController {
 
     public ResponseEntity getScenario() {
         List<ChapterResponseDto> chapters = fairyService.getScenario();
+
+        Response response = new Response();
+        response.of("result", "SUCCESS");
+        response.of("code", chapters);
+
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 }
