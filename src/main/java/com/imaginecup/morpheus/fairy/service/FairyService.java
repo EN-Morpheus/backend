@@ -14,9 +14,9 @@ public interface FairyService {
 
     ResponseEntity getManufacturedTopic(String prompt);
 
-    ApproximateStoryDto getPlot(PlotDto plotDto);
+    ResponseEntity getPlot(PlotDto plotDto);
 
-    List<ChapterResponseDto> getScenario();
+    ResponseEntity getScenario();
 
     String getChapterImage();
 

@@ -1,6 +1,9 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
+import com.imaginecup.morpheus.character.dao.CharacterRepository;
+import com.imaginecup.morpheus.character.domain.Character;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
@@ -20,6 +23,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,6 +31,7 @@ import java.util.Map;
 public class FairyServiceImpl implements FairyService {
 
     private final OpenaiService openaiService;
+    private final CharacterRepository characterRepository;
 
     @Override
     public List<String> getRandomTopics() {
@@ -41,7 +46,7 @@ public class FairyServiceImpl implements FairyService {
 
         try {
             String openaiResponse = openaiService.connectGpt(topicPrompt);
-            JSONObject responseJson = Parser.parseTopicPrompt(openaiResponse);
+            JSONObject responseJson = Parser.parseContent(openaiResponse);
             responseData.put("topic", responseJson.get("topic"));
 
             response.of("result", "SUCCESS");
@@ -54,22 +59,69 @@ public class FairyServiceImpl implements FairyService {
 
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
-    public ApproximateStoryDto getPlot(PlotDto plotDto) {
-        return null;
+    public ResponseEntity getPlot(PlotDto plotDto) {
+        Response response = new Response();
+
+        try{
+            String plotPrompt = getPlotPrompt(plotDto);
+            String openaiResponse = openaiService.connectGpt(plotPrompt);
+            JSONObject responseJson = Parser.parseContent(openaiResponse);
+            ApproximateStoryDto approximateStory = ApproximateStoryDto.
+                    builder()
+                    .title(responseJson.getString("title"))
+                    .story(responseJson.getString("story"))
+                    .subjectMatter(responseJson.getString("subjectMatter"))
+                    .plot(responseJson.getString("plot"))
+                    .characters(responseJson.getString("characters"))
+                    .linguisticExpression(responseJson.getString("linguisticExpression"))
+                    .build();
+
+            response.of("result", "SUCCESS");
+            response.of("code", approximateStory);
+
+            return new ResponseEntity(response, HttpStatus.OK);
+        } catch (RestClientException e){
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        } /*catch (JsonProcessingException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }*/
     }
 
     @Override
-    public List<ChapterResponseDto> getScenario() {
+    public ResponseEntity getScenario() {
         return null;
     }
 
     @Override
     public String getChapterImage() {
         return null;
+    }
+
+    private String getPlotPrompt(PlotDto plotDto) {
+        Optional<Character> character = characterRepository.findById(plotDto.getCharacterId());
+
+        if(character.isEmpty()) {
+            throw new RuntimeException("캐릭터 ID가 유효하지 않습니다.");
+        }
+        String plotPrompt = String.format(Prompt.USER_PLOT.getPrompt(),
+                plotDto.getTopic(),
+                character.get().getName(), character.get().getIntroduction(), character.get().getPersonality());
+
+        return plotPrompt;
     }
 
 }

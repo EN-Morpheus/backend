@@ -44,24 +44,12 @@ public class FairyController {
     @Operation(summary = "대략적인 줄거리 제공")
     @PostMapping("/prompt")
     public ResponseEntity getStory(@RequestBody PlotDto plotDto) {
-        ApproximateStoryDto approximateStoryDto = fairyService.getPlot(plotDto);
-
-        Response response = new Response();
-        response.of("result", "SUCCESS");
-        response.of("code", approximateStoryDto);
-
-        return new ResponseEntity(response, HttpStatus.OK);
+        return fairyService.getPlot(plotDto);
     }
 
     @Operation(summary = "세부 줄거리")
     @PostMapping("/actualization")
     public ResponseEntity getScenario() {
-        List<ChapterResponseDto> chapters = fairyService.getScenario();
-
-        Response response = new Response();
-        response.of("result", "SUCCESS");
-        response.of("code", chapters);
-
-        return new ResponseEntity(response, HttpStatus.OK);
+        return fairyService.getScenario();
     }
 }

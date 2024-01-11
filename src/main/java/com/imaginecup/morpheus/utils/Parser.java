@@ -1,6 +1,9 @@
 package com.imaginecup.morpheus.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
+import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +19,7 @@ public class Parser {
         return prompt;
     }
 
-    public static JSONObject parseTopicPrompt(String response) {
+    public static JSONObject parseContent(String response) {
         JSONObject rootObject = new JSONObject(response);
 
         String contentString = rootObject.getJSONArray("choices")
@@ -29,8 +32,9 @@ public class Parser {
         return contentJson;
     }
 
-    public static String parseGptResponse(String content) {
-        return null;
+    public static ApproximateStoryDto parseJson(String content) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(content, ApproximateStoryDto.class);
     }
 
     public static JSONObject extractDataFromResponse(String response) {
