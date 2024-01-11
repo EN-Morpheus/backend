@@ -58,6 +58,8 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "세부 줄거리")
+    @PostMapping("/actualization")
     public ResponseEntity getScenario() {
         List<ChapterResponseDto> chapters = fairyService.getScenario();
 
