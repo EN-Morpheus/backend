@@ -6,6 +6,6 @@ public interface OpenaiService {
 
     String generatePicture(String prompt);
 
-    String connectGpt(String systemPrompt, String userPrompt);
+    String connectGpt(String userPrompt);
 
 }

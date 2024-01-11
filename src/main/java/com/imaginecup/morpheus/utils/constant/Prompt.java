@@ -8,7 +8,19 @@ public enum Prompt {
             "Do not alter the character's prompt.\n" +
             "Don't include letters in the image.\n" +
             "There should be one person in the image"),
-    USER_TOPIC("Please specify the plot, material, composition, characters, and linguistic expressions of the overall fairy tale book in accordance with the following topics and conditions.\n" +
+    USER_TOPIC("지금부터 사용자가 입력한 동화 주제를 밑의 가이드라인을 참고하여 구체화 시켜 줘.\n" +
+            "그리고 다음 조건에 맞춰서 응답값을 제시해 줘.\n" +
+            "조건1: 다른 텍스트 없이 구체화된 주제만 json파일 형식으로 제공해 줘\n" +
+            "조건2: json형식의 구조는 다음과 같아 { topic: topic }\n" +
+            "조건3: 결과값인 구체화된 주제만 응답해 줘.\n" +
+            "구체화 시키는 예시는 다음과 같아. 예시: before: 우정 , after: 다양성과 포용성: 서로 다른 배경을 가진 친구들의 우정.\n" +
+            "사용자 입력 주제: 주인공이 외계인을 만나러 가는 이야기.\n" +
+            "가이드 라인: - 주제 탐색: 무엇에 대해 이야기하고 싶은지 생각해 보세요. 주제는 다양할 수 있으며, 보통 어린이들이 흥미를 느낄 만한 것이 좋습니다. 예를 들어, 우정, 가족, 모험, 자연, 동물 등이 주제가 될 수 있습니다.\n" +
+            "메시지 정의: 동화책에서 전달하고자 하는 중심 메시지나 교훈을 명확히 합니다. 예를 들어, '우정의 중요성', '용기와 자신감', '다양성의 수용' 등이 될 수 있습니다. 이 메시지는 동화의 교훈적인 측면을 강조하고 어린이들에게 긍정적인 영향을 줄 수 있어야 합니다.\n" +
+            "시의성 고려: 현재 사회적, 문화적 맥락이나 트렌드를 반영하는 주제를 선택할 수도 있습니다. 예를 들어, 환경 보호나 다문화 사회의 이해 등이 현대적인 주제일 수 있습니다.\n" +
+            "대상 독자와의 연관성: 선택한 주제가 대상 독자, 즉 어린이들에게 적합한지 고려합니다. 이는 어린이들의 연령대, 관심사, 인지 능력 등을 고려하여 결정해야 합니다.\n" +
+            "창의적 접근: 전통적인 이야기나 교훈을 새롭고 창의적인 방식으로 접근할 수 있습니다. 예를 들어, 고전 동화를 현대적인 맥락으로 재해석하거나, 전혀 새로운 캐릭터와 세계를 창조하는 것이 포함될 수 있습니다."),
+    USER_PLOT("Please specify the plot, material, composition, characters, and linguistic expressions of the overall fairy tale book in accordance with the following topics and conditions.\n" +
             "Themes: %s.\n" +
             "Heroine: name: %s, Introduction: %s, Personality: %s.\n" +
             "Condition 1: Please refer to the guidelines and write the plot.\n" +

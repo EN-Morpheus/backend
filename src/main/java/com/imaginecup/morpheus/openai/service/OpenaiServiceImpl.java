@@ -44,7 +44,7 @@ public class OpenaiServiceImpl implements OpenaiService {
     }
 
     @Override
-    public String connectGpt(String systemPrompt, String userPrompt) {
+    public String connectGpt(String userPrompt) {
         HttpHeaders headers = setHeader();
         Map<String, Object> responseFormat = getResponseFormat();
         List<Map<String, String>> messages = getMessages(userPrompt);
