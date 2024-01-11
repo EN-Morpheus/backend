@@ -93,12 +93,7 @@ public class FairyServiceImpl implements FairyService {
             response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
 
             return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        } /*catch (JsonProcessingException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }*/
+        }
     }
 
     @Override
