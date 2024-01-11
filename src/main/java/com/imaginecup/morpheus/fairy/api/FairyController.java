@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class FairyController {
 
     @Operation(summary = "랜덤 주제 조회")
     @GetMapping("/topic/random")
-    public ResponseEntity lookup() {
-        List<String> topics = fairyService.getTopics();
+    public ResponseEntity lookupRandomTopics() {
+        List<String> topics = fairyService.getRandomTopics();
         Response response = new Response();
         response.of("result", "SUCCESS");
         response.of("code", topics);

@@ -4,6 +4,14 @@ import java.util.List;
 
 public interface FairyService {
 
-    List<String> getTopics();
+    List<String> getRandomTopics();
+
+    String getManufacturedTopic(String prompt);
+
+    String getPlot();
+
+    String getScenario();
+
+    String getChapterImage();
 
 }

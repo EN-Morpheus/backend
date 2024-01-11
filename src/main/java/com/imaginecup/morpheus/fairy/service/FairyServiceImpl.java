@@ -13,8 +13,28 @@ import java.util.List;
 public class FairyServiceImpl implements FairyService {
 
     @Override
-    public List<String> getTopics() {
+    public List<String> getRandomTopics() {
         return RandomTopic.getTopicsAsList();
+    }
+
+    @Override
+    public String getManufacturedTopic(String prompt) {
+        return null;
+    }
+
+    @Override
+    public String getPlot() {
+        return null;
+    }
+
+    @Override
+    public String getScenario() {
+        return null;
+    }
+
+    @Override
+    public String getChapterImage() {
+        return null;
     }
 
 }
