@@ -53,4 +53,5 @@ public class FairyController {
     public ResponseEntity getScenario(@RequestBody ScenarioDto scenarioDto) {
         return fairyService.getScenario(scenarioDto);
     }
+
 }

@@ -121,7 +121,7 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public String getChapterImage() {
+    public ResponseEntity getChapterImage() {
         return null;
     }
 

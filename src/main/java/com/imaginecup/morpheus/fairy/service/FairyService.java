@@ -19,6 +19,6 @@ public interface FairyService {
 
     ResponseEntity getScenario(ScenarioDto scenarioDto);
 
-    String getChapterImage();
+    ResponseEntity getChapterImage();
 
 }
