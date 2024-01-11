@@ -2,6 +2,7 @@ package com.imaginecup.morpheus.fairy.api;
 
 import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
+import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
 import com.imaginecup.morpheus.utils.dto.Response;
@@ -49,7 +50,7 @@ public class FairyController {
 
     @Operation(summary = "세부 줄거리")
     @PostMapping("/actualization")
-    public ResponseEntity getScenario() {
-        return fairyService.getScenario();
+    public ResponseEntity getScenario(@RequestBody ScenarioDto scenarioDto) {
+        return fairyService.getScenario(scenarioDto);
     }
 }

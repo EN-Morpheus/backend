@@ -2,6 +2,7 @@ package com.imaginecup.morpheus.fairy.service;
 
 import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
+import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public interface FairyService {
 
     ResponseEntity getPlot(PlotDto plotDto);
 
-    ResponseEntity getScenario();
+    ResponseEntity getScenario(ScenarioDto scenarioDto);
 
     String getChapterImage();
 

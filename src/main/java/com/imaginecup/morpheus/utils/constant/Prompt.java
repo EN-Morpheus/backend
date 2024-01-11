@@ -38,6 +38,7 @@ public enum Prompt {
             "Character: The protagonist is a personified personification of animals, toys, objects, etc. that are mostly children or have childlike personalities. The more attractive and practical the character's personality is, the longer it lasts in the memory and the easier it is for a child to sympathize with and be touched.\n" +
             "Linguistic Expression: Sentences are short and concise, and should be fully conveyed in meaning. Rhythmic language expressions, repetitions, use of chorus, and onomatopoeia and mimicry can enhance the appeal of fairy tales."),
     USER_SCENARIO("Please take a look at the overall overview of the following fairy tale books and write a completed fairy tale scenario that satisfies the following conditions.\n" +
+            "title: %s\n" +
             "story: %s.\n" +
             "subjectMatter: %s.\n" +
             "plot: %s.\n" +
@@ -46,8 +47,9 @@ public enum Prompt {
             "Condition 1: Please write a children's book with %d chapters.\n" +
             "Condition 2: Write the plot, image background, plot, fairy tale book prints and lines specifically for each chapter.\n" +
             "Condition 3: Please only respond in json file format with no other text.\n" +
-            "Condition 4: json file format is as follows. {chapter1: {story: plot, plot: configuration, background: background, narrativeText: fairy tale book fingerprint and dialogue}, chatter2: {story: plot, plot: configuration, background: background, narrativeText: fairy tale book fingerprint and dialogue}}\n" +
-            "Condition 5: Please respond to each chapter to exist in the form of an array.");
+            "Condition 4: json file format is as follows. [chapter1: {\"story\": \"plot\", \"plot\": \"configuration\", \"background\": \"background\", \"narrativeText\": \"fairy tale book fingerprint and dialogue\"}]\n" +
+            "Condition 5: When answering in Jonson format, make sure the chapters are organized in an array. Examples are [chapter1: {}, chapter2: {}].\n" +
+            "Condition 6: Order them in ascending order from Chapter 1 and put them in Jonson");
 
     private final String prompt;
 

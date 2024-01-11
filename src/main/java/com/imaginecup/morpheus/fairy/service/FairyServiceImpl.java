@@ -5,6 +5,7 @@ import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
+import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
 import com.imaginecup.morpheus.utils.Parser;
@@ -53,7 +54,7 @@ public class FairyServiceImpl implements FairyService {
             response.of("code", responseData);
 
             return new ResponseEntity(response, HttpStatus.OK);
-        } catch (RestClientException e){
+        } catch (RestClientException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
 
@@ -65,7 +66,7 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity getPlot(PlotDto plotDto) {
         Response response = new Response();
 
-        try{
+        try {
             String plotPrompt = getPlotPrompt(plotDto);
             String openaiResponse = openaiService.connectGpt(plotPrompt);
             JSONObject responseJson = Parser.parseContent(openaiResponse);
@@ -75,7 +76,7 @@ public class FairyServiceImpl implements FairyService {
             response.of("code", approximateStory);
 
             return new ResponseEntity(response, HttpStatus.OK);
-        } catch (RestClientException e){
+        } catch (RestClientException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
 
@@ -89,8 +90,29 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public ResponseEntity getScenario() {
-        return null;
+    public ResponseEntity getScenario(ScenarioDto scenarioDto) {
+        Response response = new Response();
+
+        try {
+            String scenarioPrompt = getScenarioPrompt(scenarioDto);
+            String openaiResponse = openaiService.connectGpt(scenarioPrompt);
+
+            System.out.println(openaiResponse);
+
+            JSONObject responseJSON = Parser.parseContent(openaiResponse);
+
+            System.out.println(responseJSON);
+
+            response.of("result", "SUCCESS");
+            response.of("code", responseJSON);
+
+            return new ResponseEntity(response, HttpStatus.OK);
+        } catch (RestClientException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
@@ -101,7 +123,7 @@ public class FairyServiceImpl implements FairyService {
     private String getPlotPrompt(PlotDto plotDto) {
         Optional<Character> character = characterRepository.findById(plotDto.getCharacterId());
 
-        if(character.isEmpty()) {
+        if (character.isEmpty()) {
             throw new RuntimeException("캐릭터 ID가 유효하지 않습니다.");
         }
         String plotPrompt = String.format(Prompt.USER_PLOT.getPrompt(),
@@ -109,6 +131,16 @@ public class FairyServiceImpl implements FairyService {
                 character.get().getName(), character.get().getIntroduction(), character.get().getPersonality());
 
         return plotPrompt;
+    }
+
+    private String getScenarioPrompt(ScenarioDto scenarioDto) {
+        String scenarioPrompt = String.format(Prompt.USER_SCENARIO.getPrompt(),
+                scenarioDto.getTitle(), scenarioDto.getStory(), scenarioDto.getSubjectMatter(),
+                scenarioDto.getPlot(), scenarioDto.getCharacters(),
+                scenarioDto.getLinguisticExpression(), scenarioDto.getChapterSize()
+        );
+
+        return scenarioPrompt;
     }
 
 }
