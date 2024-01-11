@@ -33,4 +33,13 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    public ResponseEntity ManufactureTopic(@RequestParam("topic") String topic) {
+        String manufacturedTopic = fairyService.getManufacturedTopic(topic)
+        Response response = new Response();
+        response.of("result", "SUCCESS");
+        response.of("code", manufacturedTopic);
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
 }
