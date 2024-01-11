@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +24,7 @@ public class FairyController {
     @GetMapping("/topic-random")
     public ResponseEntity lookupRandomTopics() {
         List<String> topics = fairyService.getRandomTopics();
+
         Response response = new Response();
         response.of("result", "SUCCESS");
         response.of("code", topics);
@@ -37,7 +35,8 @@ public class FairyController {
     @Operation(summary = "주제 가공")
     @GetMapping("/topic-manufacture")
     public ResponseEntity ManufactureTopic(@RequestParam("topic") String topic) {
-        String manufacturedTopic = fairyService.getManufacturedTopic(topic)
+        String manufacturedTopic = fairyService.getManufacturedTopic(topic);
+
         Response response = new Response();
         response.of("result", "SUCCESS");
         response.of("code", manufacturedTopic);
@@ -45,12 +44,18 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "대략적인 줄거리 제공")
+    @PostMapping("/prompt")
     public ResponseEntity getStory() {
         ApproximateStoryDto approximateStoryDto = fairyService.getPlot();
+
         Response response = new Response();
         response.of("result", "SUCCESS");
+        response.of("code", approximateStoryDto);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
+
 
 }
