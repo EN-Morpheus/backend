@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
@@ -30,7 +31,7 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public String getScenario() {
+    public List<ChapterResponseDto> getScenario() {
         return null;
     }
 

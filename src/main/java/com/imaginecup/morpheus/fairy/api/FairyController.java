@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.api;
 
+import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
@@ -57,5 +58,7 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-
+    public ResponseEntity getScenario() {
+        List<ChapterResponseDto> chapters = fairyService.getScenario();
+    }
 }

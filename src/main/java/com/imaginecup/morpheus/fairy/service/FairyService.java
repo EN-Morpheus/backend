@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 
@@ -13,7 +14,7 @@ public interface FairyService {
 
     ApproximateStoryDto getPlot(PlotDto plotDto);
 
-    String getScenario();
+    List<ChapterResponseDto> getScenario();
 
     String getChapterImage();
 
