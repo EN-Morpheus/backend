@@ -97,17 +97,22 @@ public class FairyServiceImpl implements FairyService {
             String scenarioPrompt = getScenarioPrompt(scenarioDto);
             String openaiResponse = openaiService.connectGpt(scenarioPrompt);
 
-            System.out.println(openaiResponse);
-
             JSONObject responseJSON = Parser.parseContent(openaiResponse);
+            List<ChapterResponseDto> chapters = Parser.convertJsonToDtoList(responseJSON);
 
             System.out.println(responseJSON);
+            System.out.println(chapters);
 
             response.of("result", "SUCCESS");
-            response.of("code", responseJSON);
+            response.of("code", chapters);
 
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
 

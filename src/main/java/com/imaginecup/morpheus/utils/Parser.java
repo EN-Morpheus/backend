@@ -2,11 +2,15 @@ package com.imaginecup.morpheus.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Parser {
 
@@ -44,6 +48,34 @@ public class Parser {
         JSONObject result = new JSONObject();
         result.put("data", data);
         return result;
+    }
+
+    public static List<ChapterResponseDto> convertJsonToDtoList(JSONObject jsonObj) {
+        List<ChapterResponseDto> chapterList = new ArrayList<>();
+
+        try {
+            JSONArray chaptersArray = jsonObj.getJSONArray("chapters");
+
+            for (int i = 0; i < chaptersArray.length(); i++) {
+                JSONObject chapterObj = chaptersArray.getJSONObject(i);
+                String chapterKey = JSONObject.getNames(chapterObj)[0]; // Get the chapter key (e.g., "chapter1")
+                JSONObject chapterDetails = chapterObj.getJSONObject(chapterKey);
+
+                ChapterResponseDto chapter = ChapterResponseDto.builder()
+                        .story(chapterDetails.optString("story").replace("\n", " "))
+                        .plot(chapterDetails.optString("plot").replace("\n", " "))
+                        .background(chapterDetails.optString("background").replace("\n", " "))
+                        .narrativeText(chapterDetails.optString("narrativeText").replace("\n", " "))
+                        .order(i + 1) // Assuming chapters are in order
+                        .build();
+
+                chapterList.add(chapter);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("openai에서 문제가 발생했습니다.");
+        }
+
+        return chapterList;
     }
 
 }
