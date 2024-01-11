@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public String getPlot() {
+    public ApproximateStoryDto getPlot() {
         return null;
     }
 

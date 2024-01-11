@@ -1,5 +1,7 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
+
 import java.util.List;
 
 public interface FairyService {
@@ -8,7 +10,7 @@ public interface FairyService {
 
     String getManufacturedTopic(String prompt);
 
-    String getPlot();
+    ApproximateStoryDto getPlot();
 
     String getScenario();
 

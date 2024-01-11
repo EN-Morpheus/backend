@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.api;
 
+import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,6 +46,7 @@ public class FairyController {
     }
 
     public ResponseEntity getStory() {
+        ApproximateStoryDto approximateStoryDto = fairyService.getPlot();
         Response response = new Response();
         response.of("result", "SUCCESS");
 

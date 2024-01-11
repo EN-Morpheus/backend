@@ -1,12 +1,11 @@
 package com.imaginecup.morpheus.chapter.dto;
 
-import com.imaginecup.morpheus.picture.domain.Picture;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class chapterResponse {
+public class chapterResponseDto {
 
     private String story;
 
