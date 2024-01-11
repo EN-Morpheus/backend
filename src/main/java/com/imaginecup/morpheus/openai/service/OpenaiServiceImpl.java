@@ -53,7 +53,7 @@ public class OpenaiServiceImpl implements OpenaiService {
 
         requestBody.put("model", "gpt-4-1106-preview");
         requestBody.put("response_format", responseFormat);
-        requestBody.put("message", messages);
+        requestBody.put("messages", messages);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 

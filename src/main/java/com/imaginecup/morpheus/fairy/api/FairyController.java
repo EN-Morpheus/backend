@@ -8,6 +8,7 @@ import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +38,7 @@ public class FairyController {
     @Operation(summary = "주제 가공")
     @GetMapping("/topic-manufacture")
     public ResponseEntity ManufactureTopic(@RequestParam("topic") String topic) {
-        String manufacturedTopic = fairyService.getManufacturedTopic(topic);
-
-        Response response = new Response();
-        response.of("result", "SUCCESS");
-        response.of("code", manufacturedTopic);
-
-        return new ResponseEntity(response, HttpStatus.OK);
+        return fairyService.getManufacturedTopic(topic);
     }
 
     @Operation(summary = "대략적인 줄거리 제공")

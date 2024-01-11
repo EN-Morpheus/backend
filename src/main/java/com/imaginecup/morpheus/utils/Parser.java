@@ -26,8 +26,6 @@ public class Parser {
 
         JSONObject contentJson = new JSONObject(contentString);
 
-        System.out.println(contentJson);
-
         return contentJson;
     }
 
