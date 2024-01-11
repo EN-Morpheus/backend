@@ -44,4 +44,11 @@ public class FairyController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    public ResponseEntity getStory() {
+        Response response = new Response();
+        response.of("result", "SUCCESS");
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
 }
