@@ -26,9 +26,8 @@ public class FairyServiceImpl implements FairyService {
 
     @Override
     public String getManufacturedTopic(String prompt) {
-        String topicPrompt = String.format(Prompt.USER_TOPIC.getPrompt(), )
-        openaiService.connectGpt()
-        return null;
+        String topicPrompt = String.format(Prompt.USER_TOPIC.getPrompt(), prompt);
+        return openaiService.connectGpt(topicPrompt);
     }
 
     @Override

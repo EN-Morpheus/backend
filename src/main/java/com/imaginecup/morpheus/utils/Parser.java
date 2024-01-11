@@ -16,8 +16,19 @@ public class Parser {
         return prompt;
     }
 
-    public static String parseFairyPrompt(String prompt) {
-        return null;
+    public static JSONObject parseTopicPrompt(String response) {
+        JSONObject rootObject = new JSONObject(response);
+
+        String contentString = rootObject.getJSONArray("choices")
+                .getJSONObject(0)
+                .getJSONObject("message")
+                .getString("content");
+
+        JSONObject contentJson = new JSONObject(contentString);
+
+        System.out.println(contentJson);
+
+        return contentJson;
     }
 
     public static String parseGptResponse(String content) {
