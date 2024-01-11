@@ -47,8 +47,6 @@ public class FairyServiceImpl implements FairyService {
             response.of("result", "SUCCESS");
             response.of("code", responseData);
 
-            System.out.println(responseData);
-
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e){
             response.of("result", "FAIL");
