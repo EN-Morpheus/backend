@@ -69,15 +69,7 @@ public class FairyServiceImpl implements FairyService {
             String plotPrompt = getPlotPrompt(plotDto);
             String openaiResponse = openaiService.connectGpt(plotPrompt);
             JSONObject responseJson = Parser.parseContent(openaiResponse);
-            ApproximateStoryDto approximateStory = ApproximateStoryDto.
-                    builder()
-                    .title(responseJson.getString("title"))
-                    .story(responseJson.getString("story"))
-                    .subjectMatter(responseJson.getString("subjectMatter"))
-                    .plot(responseJson.getString("plot"))
-                    .characters(responseJson.getString("characters"))
-                    .linguisticExpression(responseJson.getString("linguisticExpression"))
-                    .build();
+            ApproximateStoryDto approximateStory = new ApproximateStoryDto(responseJson);
 
             response.of("result", "SUCCESS");
             response.of("code", approximateStory);
