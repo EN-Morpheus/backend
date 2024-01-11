@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.api;
 
+import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
 import com.imaginecup.morpheus.utils.dto.Response;
@@ -46,8 +47,8 @@ public class FairyController {
 
     @Operation(summary = "대략적인 줄거리 제공")
     @PostMapping("/prompt")
-    public ResponseEntity getStory() {
-        ApproximateStoryDto approximateStoryDto = fairyService.getPlot();
+    public ResponseEntity getStory(@RequestBody PlotDto plotDto) {
+        ApproximateStoryDto approximateStoryDto = fairyService.getPlot(plotDto);
 
         Response response = new Response();
         response.of("result", "SUCCESS");
