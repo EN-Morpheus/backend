@@ -1,6 +1,7 @@
 package com.imaginecup.morpheus.openai.service;
 
 import com.imaginecup.morpheus.utils.constant.Endpoint;
+import com.imaginecup.morpheus.utils.constant.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -46,7 +47,7 @@ public class OpenaiServiceImpl implements OpenaiService {
     public String connectGpt(String systemPrompt, String userPrompt) {
         HttpHeaders headers = setHeader();
         Map<String, Object> responseFormat = getResponseFormat();
-        List<Map<String, String>> messages = getMessages(systemPrompt, userPrompt);
+        List<Map<String, String>> messages = getMessages(userPrompt);
 
         Map<String, Object> requestBody = new HashMap<>();
 
@@ -83,13 +84,13 @@ public class OpenaiServiceImpl implements OpenaiService {
         return responseFormat;
     }
 
-    private List<Map<String, String>> getMessages(String systemPrompt, String userPrompt) {
+    private List<Map<String, String>> getMessages(String userPrompt) {
         List<Map<String, String>> messages = new ArrayList<>();
 
         // 첫 번째 메시지 추가
         Map<String, String> systemMessage = new HashMap<>();
         systemMessage.put("role", "system");
-        systemMessage.put("content", systemPrompt);
+        systemMessage.put("content", Role.SYSTEM_AUTHOR.getPrompt());
         messages.add(systemMessage);
 
         // 두 번째 메시지 추가

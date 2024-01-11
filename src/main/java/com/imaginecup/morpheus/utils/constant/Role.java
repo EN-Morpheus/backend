@@ -1,13 +1,7 @@
 package com.imaginecup.morpheus.utils.constant;
 
-public enum Prompt {
-
-    SAVE_CHARACTER_PROMPT("A character in the style of %s animation.\n" +
-            "The protagonist's introduction is %s.\n" +
-            "The protagonist's appearance is a %s.\n" +
-            "Do not alter the character's prompt.\n" +
-            "Don't include letters in the image.\n" +
-            "There should be one person in the image"),
+public enum Role {
+    SYSTEM_AUTHOR("지금부터 너는 세계적인 어린이들을 위한 동화책을 쓰는 작가야"),
     USER_TOPIC("다음 주제와 조건에 맞춰서 전체적인 동화책의 줄거리, 소재, 구성, 등장인물, 언어적 표현에 대해서도 구체적으로 작성해 줘.\n" +
             "주제: %s.\n" +
             "주인공: 이름: %s, 소개: %s, 환경: %s, 자기소개: %s.\n" +
@@ -28,7 +22,7 @@ public enum Prompt {
 
     private final String prompt;
 
-    Prompt(String prompt) {
+    Role(String prompt) {
         this.prompt = prompt;
     }
 

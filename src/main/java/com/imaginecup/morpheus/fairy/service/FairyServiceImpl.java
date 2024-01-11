@@ -22,6 +22,7 @@ public class FairyServiceImpl implements FairyService {
 
     @Override
     public String getManufacturedTopic(String prompt) {
+
         return null;
     }
 
