@@ -8,4 +8,6 @@ public interface OpenaiService {
 
     String connectGpt(String userPrompt);
 
+    String connectScenarioGpt(String userPrompt);
+
 }

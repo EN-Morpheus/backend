@@ -61,6 +61,24 @@ public class OpenaiServiceImpl implements OpenaiService {
         return response.getBody();
     }
 
+    @Override
+    public String connectScenarioGpt(String userPrompt) {
+        HttpHeaders headers = setHeader();
+        Map<String, Object> responseFormat = getResponseFormat();
+        List<Map<String, String>> messages = getScenarioMessage(userPrompt);
+
+        Map<String, Object> requestBody = new HashMap<>();
+
+        requestBody.put("model", "gpt-4-1106-preview");
+        requestBody.put("response_format", responseFormat);
+        requestBody.put("messages", messages);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> response = getResponse(Endpoint.GPT_API_URL.getUrl(), request);
+        return response.getBody();
+    }
+
     private ResponseEntity<String> getResponse(String url, HttpEntity<Map<String, Object>> request) {
         try {
             return restTemplate.postForEntity(url, request, String.class);
@@ -91,6 +109,24 @@ public class OpenaiServiceImpl implements OpenaiService {
         Map<String, String> systemMessage = new HashMap<>();
         systemMessage.put("role", "system");
         systemMessage.put("content", Role.SYSTEM_AUTHOR.getPrompt());
+        messages.add(systemMessage);
+
+        // 두 번째 메시지 추가
+        Map<String, String> userMessage = new HashMap<>();
+        userMessage.put("role", "user");
+        userMessage.put("content", userPrompt);
+        messages.add(userMessage);
+
+        return messages;
+    }
+
+    private List<Map<String, String>> getScenarioMessage(String userPrompt) {
+        List<Map<String, String>> messages = new ArrayList<>();
+
+        // 첫 번째 메시지 추가
+        Map<String, String> systemMessage = new HashMap<>();
+        systemMessage.put("role", "system");
+        systemMessage.put("content", String.format("%s %s", Role.SYSTEM_AUTHOR.getPrompt(), Role.SYSTEM_JSON_SCHEMA.getPrompt()));
         messages.add(systemMessage);
 
         // 두 번째 메시지 추가

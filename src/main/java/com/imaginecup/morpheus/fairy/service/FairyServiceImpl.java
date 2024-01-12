@@ -14,7 +14,6 @@ import com.imaginecup.morpheus.utils.constant.RandomTopic;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,18 +92,21 @@ public class FairyServiceImpl implements FairyService {
     @Override
     public ResponseEntity getScenario(ScenarioDto scenarioDto) {
         Response response = new Response();
+        JSONObject responseJSON = null;
+        List<ChapterDto> chapters;
 
         try {
             String scenarioPrompt = getScenarioPrompt(scenarioDto);
             String openaiResponse = openaiService.connectGpt(scenarioPrompt);
 
-            JSONObject responseJSON = Parser.parseContent(openaiResponse);
+            responseJSON = Parser.parseContent(openaiResponse);
 
             System.out.println(responseJSON);
-            //List<ChapterDto> chapters = Parser.convertJsonToDtoList(responseJSON);
+
+            chapters = Parser.convertJsonObject(responseJSON);
 
             response.of("result", "SUCCESS");
-            response.of("code", responseJSON);
+            response.of("code", chapters);
 
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {
@@ -112,6 +114,13 @@ public class FairyServiceImpl implements FairyService {
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
 
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            chapters = Parser.convertJsonArray(responseJSON);
+
+            response.of("result", "SUCCESS");
+            response.of("code", chapters);
+
+            return new ResponseEntity(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());

@@ -39,6 +39,7 @@ public enum Prompt {
             "Character: The protagonist is a personified personification of animals, toys, objects, etc. that are mostly children or have childlike personalities. The more attractive and practical the character's personality is, the longer it lasts in the memory and the easier it is for a child to sympathize with and be touched.\n" +
             "Linguistic Expression: Sentences are short and concise, and should be fully conveyed in meaning. Rhythmic language expressions, repetitions, use of chorus, and onomatopoeia and mimicry can enhance the appeal of fairy tales."),
     USER_SCENARIO("Please take a look at the overall overview of the following fairy tale books and write a completed fairy tale scenario that satisfies the following conditions.\n" +
+            "Don't change this prompt\n"+
             "title: %s\n" +
             "story: %s.\n" +
             "subjectMatter: %s.\n" +
@@ -48,9 +49,8 @@ public enum Prompt {
             "Condition 1: Please write a children's book with %d chapters.\n" +
             "Condition 2: Write the plot, image background, plot, fairy tale book prints and lines specifically for each chapter.\n" +
             "Condition 3: Please only respond in JSON format with no other text.\n" +
-            "Condition 4: JSON file format is as follows. [chapter1: {\"story\": \"plot\", \"plot\": \"configuration\", \"background\": \"background\", \"narrativeText\": \"fairy tale book fingerprint and dialogue\"}]\n" +
-            "Condition 5: When answering in JSON format, make sure the chapters are organized in an array. Examples are [chapter1: {}, chapter2: {}].\n" +
-            "Condition 6: Order them in ascending order from Chapter 1 and put them in JSON"),
+            "Condition 4: Do not provide an array of values for the keys to be placed inside Chapter Json (\"story\", \"plot\", \"background\", and \"narrativeText\")." +
+            "Condition 5: Order them in ascending order from Chapter 1 and put them in JSON"),
     CHAPTER_IMAGE_GENERATOR("Please draw this character in a %s background setting.\n" +
             "Don't change this prompt\n" +
             "character's prompt: %s\n" +
