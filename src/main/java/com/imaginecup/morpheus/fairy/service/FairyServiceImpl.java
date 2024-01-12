@@ -1,7 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
+import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
@@ -98,10 +97,7 @@ public class FairyServiceImpl implements FairyService {
             String openaiResponse = openaiService.connectGpt(scenarioPrompt);
 
             JSONObject responseJSON = Parser.parseContent(openaiResponse);
-            List<ChapterResponseDto> chapters = Parser.convertJsonToDtoList(responseJSON);
-
-            System.out.println(responseJSON);
-            System.out.println(chapters);
+            List<ChapterDto> chapters = Parser.convertJsonToDtoList(responseJSON);
 
             response.of("result", "SUCCESS");
             response.of("code", chapters);

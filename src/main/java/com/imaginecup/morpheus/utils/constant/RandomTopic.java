@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum RandomTopic {
+
     SHARING("The Importance of Sharing: A Story of Siblings Learning to Share Their Toys"),
     BRAVERY("Bravery in Everyday Life: A Tale of a Child Overcoming Fear of the Dark"),
     JOY_OF_LEARNING("The Joy of Learning: Adventures of a Curious Squirrel in School"),

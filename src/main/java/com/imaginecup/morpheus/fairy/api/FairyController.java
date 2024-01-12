@@ -1,15 +1,12 @@
 package com.imaginecup.morpheus.fairy.api;
 
-import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
-import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
 import com.imaginecup.morpheus.utils.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

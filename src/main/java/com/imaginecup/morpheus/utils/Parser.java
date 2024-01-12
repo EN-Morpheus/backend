@@ -2,7 +2,7 @@ package com.imaginecup.morpheus.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.imaginecup.morpheus.chapter.dto.ChapterResponseDto;
+import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.Prompt;
@@ -50,8 +50,8 @@ public class Parser {
         return result;
     }
 
-    public static List<ChapterResponseDto> convertJsonToDtoList(JSONObject jsonObj) {
-        List<ChapterResponseDto> chapterList = new ArrayList<>();
+    public static List<ChapterDto> convertJsonToDtoList(JSONObject jsonObj) {
+        List<ChapterDto> chapterList = new ArrayList<>();
 
         try {
             JSONArray chaptersArray = jsonObj.getJSONArray("chapters");
@@ -61,7 +61,7 @@ public class Parser {
                 String chapterKey = JSONObject.getNames(chapterObj)[0]; // Get the chapter key (e.g., "chapter1")
                 JSONObject chapterDetails = chapterObj.getJSONObject(chapterKey);
 
-                ChapterResponseDto chapter = ChapterResponseDto.builder()
+                ChapterDto chapter = ChapterDto.builder()
                         .story(chapterDetails.optString("story").replace("\n", " "))
                         .plot(chapterDetails.optString("plot").replace("\n", " "))
                         .background(chapterDetails.optString("background").replace("\n", " "))
