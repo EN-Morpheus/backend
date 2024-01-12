@@ -53,29 +53,23 @@ public class Parser {
         return dataArray.toList();
     }
 
-    public static List<ChapterDto> convertJsonToDtoList(JSONObject jsonObj) {
-        List<ChapterDto> chapterList = new ArrayList<>();
+    public static List<ChapterDto> convertJsonToDtoList(JSONObject jsonObject) {
+        List<ChapterDto> chapterDtoList = new ArrayList<>();
 
-        try {
-            JSONArray chaptersArray = jsonObj.getJSONArray("chapters");
+        // Assuming your JSON keys are chapter1, chapter2, chapter3, etc.
+        for (int i = 1; i <= jsonObject.length(); i++) {
+            JSONObject chapter = jsonObject.getJSONObject("chapter" + i);
 
-            for (int i = 0; i < chaptersArray.length(); i++) {
-                JSONObject chapterObj = chaptersArray.getJSONObject(i);
-                String chapterKey = JSONObject.getNames(chapterObj)[0]; // Get the chapter key (e.g., "chapter1")
-                JSONObject chapterDetails = chapterObj.getJSONObject(chapterKey);
+            ChapterDto chapterDto = ChapterDto.builder()
+                    .story(chapter.getString("story"))
+                    .plot(chapter.getString("plot"))
+                    .background(chapter.getString("background"))
+                    .narrativeText(chapter.getString("narrativeText"))
+                    .order(i)
+                    .imageUrl(chapter.optString("imageUrl", null))
+                    .build();
 
-                ChapterDto chapter = ChapterDto.builder()
-                        .story(chapterDetails.optString("story"))
-                        .plot(chapterDetails.optString("plot"))
-                        .background(chapterDetails.optString("background"))
-                        .narrativeText(chapterDetails.optString("narrativeText"))
-                        .order(i + 1) // Assuming chapters are in order
-                        .build();
-
-                chapterList.add(chapter);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("openai에서 문제가 발생했습니다.");
+            chapterDtoList.add(chapterDto);
         }
 
         return chapterList;
