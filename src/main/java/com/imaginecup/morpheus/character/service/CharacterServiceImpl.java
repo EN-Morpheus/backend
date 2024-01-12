@@ -72,6 +72,8 @@ public class CharacterServiceImpl implements CharacterService {
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
                                     .name(savedCharacter.getName())
                                     .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
+                                    .style(savedCharacter.getCharacterCreationForm().getStyle())
+                                    .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
                                     .build();
 
                             characterRepository.save(character);

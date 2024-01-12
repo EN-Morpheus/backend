@@ -57,7 +57,7 @@ public enum Prompt {
             "Condition 1: The image should not contain any letters.\n" +
             "Condition 2: Draw a level painting that fits a children's fairy tale painting.\n" +
             "Condition 3: Draw a picture that fits the %s story.\n" +
-            "Condition 4: The characteristics of the main character is %s." +
+            "Condition 4: The personality of the main character is %s." +
             "Reference: %s is the name of the character.");
 
     private final String prompt;

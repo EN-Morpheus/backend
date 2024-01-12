@@ -14,6 +14,7 @@ import com.imaginecup.morpheus.utils.constant.RandomTopic;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -121,15 +122,31 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity getChapterImage(ChapterImageGeneratorDto chapterImageGeneratorDto) {
         Response response = new Response();
 
-        try{
+        try {
+            String imagePrompt = getChapterImagePrompt(chapterImageGeneratorDto);
+            String openaiResponse = openaiService.generatePicture(imagePrompt);
 
+            JSONObject imageData = Parser.extractDataFromResponse(openaiResponse);
+
+            Map<String, Object> imageDataMap = new HashMap<>();
+            JSONArray dataArray = imageData.getJSONArray("data");
+            imageDataMap.put("data", dataArray.toList());
+
+            response.of("result", "SUCCESS");
+            response.of("image url", imageDataMap);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RestClientException e) {
+            response.of("result", "FAIL");
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
+
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             response.of("result", "FAIL");
-            response.of("error", e.getMessage());
+            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
 
             return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     private String getPlotPrompt(PlotDto plotDto) {
@@ -157,6 +174,13 @@ public class FairyServiceImpl implements FairyService {
 
         String characterPrompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
                 character.getStyle(), character.getIntroduction(), character.getAppearance());
+
+        String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
+                chapterImageGeneratorDto.getChapterBackground(), characterPrompt,
+                chapterImageGeneratorDto.getChapterStory(), character.getPersonality(),
+                character.getName());
+
+        return chapterImagePrompt;
     }
 
     private Character findCharacter(Long characterId) {
