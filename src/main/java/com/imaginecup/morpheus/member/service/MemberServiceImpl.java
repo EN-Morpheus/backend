@@ -104,9 +104,4 @@ public class MemberServiceImpl implements MemberService {
                 );
     }
 
-    private boolean isDuplicatedId(String memberId) {
-        return memberRepository.existsByMemberId(memberId);
-    }
-
-
 }

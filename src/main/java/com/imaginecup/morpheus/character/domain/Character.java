@@ -38,6 +38,12 @@ public class Character {
     @Column(nullable = false)
     private String introduction;
 
+    @Column(nullable = false)
+    private String style;
+
+    @Column(nullable = false)
+    private String appearance;
+
     @JoinColumn(nullable = false)
     @OneToOne(cascade = CascadeType.ALL)
     private Picture picture;

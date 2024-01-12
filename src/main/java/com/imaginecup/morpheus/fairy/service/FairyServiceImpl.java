@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
@@ -117,19 +118,26 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public ResponseEntity getChapterImage() {
+    public ResponseEntity getChapterImage(ChapterImageGeneratorDto chapterImageGeneratorDto) {
+        Response response = new Response();
+
+        try{
+
+        } catch (RuntimeException e) {
+            response.of("result", "FAIL");
+            response.of("error", e.getMessage());
+
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        }
         return null;
     }
 
     private String getPlotPrompt(PlotDto plotDto) {
-        Optional<Character> character = characterRepository.findById(plotDto.getCharacterId());
+        Character character = findCharacter(plotDto.getCharacterId());
 
-        if (character.isEmpty()) {
-            throw new RuntimeException("캐릭터 ID가 유효하지 않습니다.");
-        }
         String plotPrompt = String.format(Prompt.USER_PLOT.getPrompt(),
                 plotDto.getTopic(),
-                character.get().getName(), character.get().getIntroduction(), character.get().getPersonality());
+                character.getName(), character.getIntroduction(), character.getPersonality());
 
         return plotPrompt;
     }
@@ -142,6 +150,23 @@ public class FairyServiceImpl implements FairyService {
         );
 
         return scenarioPrompt;
+    }
+
+    private String getChapterImagePrompt(ChapterImageGeneratorDto chapterImageGeneratorDto) {
+        Character character = findCharacter(chapterImageGeneratorDto.getCharacterId());
+
+        String characterPrompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
+                character.getStyle(), character.getIntroduction(), character.getAppearance());
+    }
+
+    private Character findCharacter(Long characterId) {
+        Optional<Character> character = characterRepository.findById(characterId);
+
+        if (character.isEmpty()) {
+            throw new RuntimeException("캐릭터 ID가 유효하지 않습니다.");
+        }
+
+        return character.get();
     }
 
 }

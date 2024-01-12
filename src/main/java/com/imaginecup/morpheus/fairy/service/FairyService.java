@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,6 @@ public interface FairyService {
 
     ResponseEntity getScenario(ScenarioDto scenarioDto);
 
-    ResponseEntity getChapterImage();
+    ResponseEntity getChapterImage(ChapterImageGeneratorDto chapterImageGeneratorDto);
 
 }
