@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.fairy.api;
 
+import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
@@ -49,6 +50,12 @@ public class FairyController {
     @PostMapping("/actualization")
     public ResponseEntity getScenario(@RequestBody ScenarioDto scenarioDto) {
         return fairyService.getScenario(scenarioDto);
+    }
+
+    @Operation(summary = "챕터 당 이미지 생성")
+    @PostMapping("/chapter-image")
+    public ResponseEntity getChapterImage(@RequestBody ChapterImageGeneratorDto chapterImageGeneratorDto) {
+        return fairyService.getChapterImage(chapterImageGeneratorDto);
     }
 
 }
