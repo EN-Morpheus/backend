@@ -41,14 +41,16 @@ public class Parser {
         return objectMapper.readValue(content, ApproximateStoryDto.class);
     }
 
-    public static JSONObject extractDataFromResponse(String response) {
+    public static List<Object> extractDataFromResponse(String response) {
         JSONObject jsonResponse = new JSONObject(response);
         JSONArray data = jsonResponse.getJSONArray("data");
 
         JSONObject result = new JSONObject();
         result.put("data", data);
 
-        return result;
+        JSONArray dataArray = result.getJSONArray("data");
+
+        return dataArray.toList();
     }
 
     public static List<ChapterDto> convertJsonToDtoList(JSONObject jsonObj) {

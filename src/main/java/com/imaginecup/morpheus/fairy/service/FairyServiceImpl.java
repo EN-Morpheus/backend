@@ -126,11 +126,10 @@ public class FairyServiceImpl implements FairyService {
             String imagePrompt = getChapterImagePrompt(chapterImageGeneratorDto);
             String openaiResponse = openaiService.generatePicture(imagePrompt);
 
-            JSONObject imageData = Parser.extractDataFromResponse(openaiResponse);
+            List<Object> imageData = Parser.extractDataFromResponse(openaiResponse);
 
             Map<String, Object> imageDataMap = new HashMap<>();
-            JSONArray dataArray = imageData.getJSONArray("data");
-            imageDataMap.put("data", dataArray.toList());
+            imageDataMap.put("data", imageData);
 
             response.of("result", "SUCCESS");
             response.of("image url", imageDataMap);

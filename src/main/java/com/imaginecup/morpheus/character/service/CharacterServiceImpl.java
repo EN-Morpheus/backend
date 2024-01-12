@@ -120,11 +120,10 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
         String imageBody = openaiService.generatePicture(prompt);
-        JSONObject imageData = Parser.extractDataFromResponse(imageBody);
+        List<Object> imageData = Parser.extractDataFromResponse(imageBody);
 
         Map<String, Object> imageDataMap = new HashMap<>();
-        JSONArray dataArray = imageData.getJSONArray("data");
-        imageDataMap.put("data", dataArray.toList());
+        imageDataMap.put("data", imageData);
 
         Response response = new Response();
         response.of("result", "SUCCESS");
