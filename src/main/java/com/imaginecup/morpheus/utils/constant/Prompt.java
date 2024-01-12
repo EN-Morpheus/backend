@@ -2,7 +2,8 @@ package com.imaginecup.morpheus.utils.constant;
 
 public enum Prompt {
 
-    SAVE_CHARACTER_PROMPT("A character in the style of %s animation.\n" +
+    SAVE_CHARACTER_PROMPT("Please draw this character. Don't change this prompt\n" +
+            "A character in the style of %s animation.\n" +
             "The protagonist's introduction is %s.\n" +
             "The protagonist's appearance is a %s.\n" +
             "Do not alter the character's prompt.\n" +
