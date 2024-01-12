@@ -50,7 +50,7 @@ public enum Prompt {
             "Condition 3: Please only respond in json file format with no other text.\n" +
             "Condition 4: json file format is as follows. [chapter1: {\"story\": \"plot\", \"plot\": \"configuration\", \"background\": \"background\", \"narrativeText\": \"fairy tale book fingerprint and dialogue\"}]\n" +
             "Condition 5: When answering in Jonson format, make sure the chapters are organized in an array. Examples are [chapter1: {}, chapter2: {}].\n" +
-            "Condition 6: Order them in ascending order from Chapter 1 and put them in Jonson"),
+            "Condition 6: Order them in ascending order from Chapter 1 and put them in JSON"),
     CHAPTER_IMAGE_GENERATOR("Please draw this character in a %s background setting.\n" +
             "Don't change this prompt\n" +
             "character's prompt: %s\n" +

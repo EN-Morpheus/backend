@@ -99,10 +99,12 @@ public class FairyServiceImpl implements FairyService {
             String openaiResponse = openaiService.connectGpt(scenarioPrompt);
 
             JSONObject responseJSON = Parser.parseContent(openaiResponse);
-            List<ChapterDto> chapters = Parser.convertJsonToDtoList(responseJSON);
+
+            System.out.println(responseJSON);
+            //List<ChapterDto> chapters = Parser.convertJsonToDtoList(responseJSON);
 
             response.of("result", "SUCCESS");
-            response.of("code", chapters);
+            response.of("code", responseJSON);
 
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {

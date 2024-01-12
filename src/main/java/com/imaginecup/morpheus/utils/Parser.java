@@ -65,10 +65,10 @@ public class Parser {
                 JSONObject chapterDetails = chapterObj.getJSONObject(chapterKey);
 
                 ChapterDto chapter = ChapterDto.builder()
-                        .story(chapterDetails.optString("story").replace("\n", " "))
-                        .plot(chapterDetails.optString("plot").replace("\n", " "))
-                        .background(chapterDetails.optString("background").replace("\n", " "))
-                        .narrativeText(chapterDetails.optString("narrativeText").replace("\n", " "))
+                        .story(chapterDetails.optString("story"))
+                        .plot(chapterDetails.optString("plot"))
+                        .background(chapterDetails.optString("background"))
+                        .narrativeText(chapterDetails.optString("narrativeText"))
                         .order(i + 1) // Assuming chapters are in order
                         .build();
 
