@@ -75,8 +75,12 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public void deleteChapter(Long temporaryId) {
+    public void deleteChapter(Long temporaryId) throws NoSuchFieldException {
         List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(temporaryId);
+
+        if (chapters.size() == 0) {
+            throw new NoSuchFieldException("임시 저장된 데이터가 아닙니다.");
+        }
 
         for (Chapter chapter : chapters) {
             if (chapter.getImage() == null) {

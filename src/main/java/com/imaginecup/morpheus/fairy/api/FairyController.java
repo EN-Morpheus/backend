@@ -1,10 +1,13 @@
 package com.imaginecup.morpheus.fairy.api;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
+import com.imaginecup.morpheus.chapter.service.ChapterService;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
+import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,7 @@ import java.util.List;
 public class FairyController {
 
     private final FairyService fairyService;
+    private final ChapterService chapterservice;
 
     @Operation(summary = "랜덤 주제 조회")
     @GetMapping("/topic-random")
@@ -61,14 +66,23 @@ public class FairyController {
 
     @Operation(summary = "임시 저장")
     @PostMapping("/temporary/save")
-    public ResponseEntity saveTemporary(@RequestBody Chapters chapters){
+    public ResponseEntity saveTemporary(@RequestBody Chapters chapters) {
         return fairyService.saveTemporaryFairy(chapters);
     }
 
     @Operation(summary = "임시 저장 데이터 삭제")
     @DeleteMapping("temporary/delete")
-    public ResponseEntity deleteTemporary(@RequestBody Chapters chapters) {
-        return fairyService.deleteTemporaryFairy(chapters);
+    public ResponseEntity deleteTemporary(@RequestParam("temporaryFairyId") Long temporaryFairyId) {
+        try {
+            chapterservice.deleteChapter(temporaryFairyId);
+            return fairyService.deleteTemporaryFairy(temporaryFairyId);
+        } catch (IllegalArgumentException | NoSuchFieldException e) {
+            return ResponseHandler.create400Error(new Response(), e);
+        } catch (AmazonS3Exception e) {
+            return ResponseHandler.create500Error(new Response(), e);
+        } catch (RuntimeException e) {
+            return ResponseHandler.create400Error(new Response(), e);
+        }
     }
 
 }

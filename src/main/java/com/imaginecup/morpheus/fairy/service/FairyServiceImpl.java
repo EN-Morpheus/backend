@@ -145,9 +145,8 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public ResponseEntity deleteTemporaryFairy(Chapters chapters) {
-        TemporaryFairy temporaryFairy = findTemporaryFairy(chapters.getTemporaryFairyId());
-        chapterService.deleteChapter(temporaryFairy.getId());
+    public ResponseEntity deleteTemporaryFairy(Long temporaryFairyId) {
+        TemporaryFairy temporaryFairy = findTemporaryFairy(temporaryFairyId);
         temporaryFairyRepository.delete(temporaryFairy);
 
         return ResponseHandler.create204Response(new Response(), "삭제 완료");
@@ -207,7 +206,7 @@ public class FairyServiceImpl implements FairyService {
         Optional<TemporaryFairy> temporaryFairy = temporaryFairyRepository.findById(temporaryFairyId);
 
         if (temporaryFairy.isEmpty()) {
-            throw new RuntimeException("임시 저장 데이터의 ID가 유효하지 않습니다.");
+            throw new IllegalArgumentException("임시 저장 데이터의 ID가 유효하지 않습니다.");
         }
 
         return temporaryFairy.get();

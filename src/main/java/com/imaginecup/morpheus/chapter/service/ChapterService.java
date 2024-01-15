@@ -18,6 +18,6 @@ public interface ChapterService {
 
     List<Chapter> updateTemporary(List<Chapter> chapters, List<ChapterDto> chapterDtos) throws Exception;
 
-    void deleteChapter(Long temporaryId);
+    void deleteChapter(Long temporaryId) throws NoSuchFieldException;
 
 }
