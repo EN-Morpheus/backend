@@ -1,4 +1,4 @@
-package com.imaginecup.morpheus.utils.dto;
+package com.imaginecup.morpheus.utils.response.dto;
 
 import lombok.Builder;
 import lombok.Getter;

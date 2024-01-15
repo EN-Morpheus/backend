@@ -22,7 +22,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class S3ServiceImpl implements S3Service{
+public class S3ServiceImpl implements S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -73,7 +73,7 @@ public class S3ServiceImpl implements S3Service{
         amazonS3Client.putObject(bucket, fileName, picture.getInputStream(), metadata);
     }
 
-    private void uploadThumbnailImage(MultipartFile picture, String fileName ) throws IOException {
+    private void uploadThumbnailImage(MultipartFile picture, String fileName) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Thumbnails.of(picture.getInputStream()).size(100, 100).toOutputStream(os);
         byte[] thumbnailBytes = os.toByteArray();
