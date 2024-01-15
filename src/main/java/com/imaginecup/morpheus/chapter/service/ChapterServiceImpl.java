@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,10 +29,12 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public Chapters saveChaptersJsonObject(Long temporaryFairyId, JSONObject json) {
-        return Chapters.builder()
+        Chapters chapters = Chapters.builder()
                 .temporaryFairyId(temporaryFairyId)
                 .chapters(Parser.convertJsonObject(json))
                 .build();
+
+        return chapters;
     }
 
     @Override
@@ -42,9 +46,9 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public void saveFirstTemporary(TemporaryFairy temporaryFairy, Chapters chapters) throws Exception {
+    public void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters){
         int order = 1;
-        for (ChapterDto chapterDto : chapters.getChapters()) {
+        for (ChapterDto chapterDto : chapters) {
             Chapter chapter = Chapter.builder()
                     .plot(chapterDto.getPlot())
                     .background(chapterDto.getBackground())
@@ -59,7 +63,7 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public Chapter updateTemporary(TemporaryFairy temporaryFairy, Chapters chapters) {
+    public Chapter updateTemporary(TemporaryFairy temporaryFairy, List<Chapter> chapters) {
         return null;
     }
 

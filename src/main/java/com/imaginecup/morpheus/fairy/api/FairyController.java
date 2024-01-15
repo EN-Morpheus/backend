@@ -5,7 +5,7 @@ import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
-import com.imaginecup.morpheus.utils.dto.Response;
+import com.imaginecup.morpheus.utils.response.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

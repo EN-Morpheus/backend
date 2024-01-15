@@ -3,7 +3,6 @@ package com.imaginecup.morpheus.fairy.service;
 import com.imaginecup.morpheus.chapter.dao.ChapterRepository;
 import com.imaginecup.morpheus.chapter.domain.Chapter;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
-import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.chapter.service.ChapterService;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
@@ -21,9 +20,9 @@ import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
-import com.imaginecup.morpheus.utils.dto.DetailResponse;
-import com.imaginecup.morpheus.utils.dto.Response;
-import com.imaginecup.morpheus.utils.exception.ExceptionHandler;
+import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
+import com.imaginecup.morpheus.utils.response.dto.Response;
+import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -113,16 +112,18 @@ public class FairyServiceImpl implements FairyService {
         try {
             responseJSON = processScenario(scenarioDto, temporaryFairy);
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
+            chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
+
             response.of("result", "SUCCESS");
             response.of("code", chapters);
         } catch (RestClientException e) {
-            return ExceptionHandler.create500Error(response, e);
+            return ResponseHandler.create500Error(response, e);
         } catch (IllegalArgumentException e) {
             Chapters chapters = chapterService.saveChaptersJsonArray(temporaryFairy.getId(), responseJSON);
             response.of("result", "SUCCESS");
             response.of("code", chapters);
         } catch (RuntimeException e) {
-            return ExceptionHandler.create500Error(response, e);
+            return ResponseHandler.create500Error(response, e);
         }
         return new ResponseEntity(response, HttpStatus.OK);
 
@@ -141,25 +142,26 @@ public class FairyServiceImpl implements FairyService {
             Map<String, Object> imageDataMap = new HashMap<>();
             imageDataMap.put("data", imageData);
 
-            response.of("result", "SUCCESS");
-            response.of("image url", imageDataMap);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseHandler.create200Response(response, imageDataMap);
         } catch (RestClientException e) {
-            return ExceptionHandler.create500Error(response, e);
+            return ResponseHandler.create500Error(response, e);
         } catch (RuntimeException e) {
-            return ExceptionHandler.create400Error(response, e);
+            return ResponseHandler.create400Error(response, e);
         }
     }
 
     @Override
     public ResponseEntity saveTemporaryFairy(Chapters chaptersDto) {
-        List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
+        Response response = new Response();
+        try {
+            TemporaryFairy temporaryFairy = findTemporaryFairy(chaptersDto.getTemporaryFairyId());
+            List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
+            chapterService.updateTemporary(temporaryFairy, chapters);
 
-        for(Chapter chapter : chapters) {
-            chapterRepository.save(ch)
+            return ResponseHandler.create202Response(response);
+        } catch (RuntimeException e) {
+            return ResponseHandler.create400Error(response, e);
         }
-        return null;
     }
 
     @Override
