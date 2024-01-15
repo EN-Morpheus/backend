@@ -143,15 +143,9 @@ public class FairyServiceImpl implements FairyService {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ExceptionHandler.create500Error(response, e);
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            return ExceptionHandler.create400Error(response, e);
         }
     }
 

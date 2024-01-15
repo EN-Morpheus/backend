@@ -13,4 +13,11 @@ public class ExceptionHandler {
         return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public static ResponseEntity create400Error(Response response, Exception e) {
+        response.of("result", "FAIL");
+        response.of("error", DetailResponse.builder().code(400).message(e.getMessage()).build());
+
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+    }
+
 }
