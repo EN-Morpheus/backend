@@ -41,7 +41,7 @@ public class ChapterServiceImpl implements ChapterService {
     public Chapters saveChaptersJsonArray(Long temporaryFairyId, JSONObject json) {
         return Chapters.builder()
                 .temporaryFairyId(temporaryFairyId)
-                .chapters(Parser.convertJsonArray((JSONObject) json))
+                .chapters(Parser.convertJsonArray(json))
                 .build();
     }
 

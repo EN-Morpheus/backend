@@ -18,6 +18,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @RequiredArgsConstructor
 @Transactional
@@ -63,6 +65,24 @@ public class S3ServiceImpl implements S3Service {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void deleteImage(String url) {
+        try {
+            URL s3Url = new URL(url);
+
+            // URL에서 키 추출 (경로 부분)
+            String key = s3Url.getPath().substring(1); // Remove the leading '/'
+
+            // S3에서 파일 삭제
+            amazonS3Client.deleteObject(bucket, key);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("잘못된 URL 형식입니다.", e);
+        } catch (AmazonS3Exception e) {
+            throw new AmazonS3Exception("S3에서 파일을 삭제하는 과정 중 문제가 발생했습니다.");
+        }
+    }
+
 
     private void uploadOriginImage(MultipartFile picture, String fileName) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();

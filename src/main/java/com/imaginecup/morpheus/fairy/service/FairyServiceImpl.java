@@ -20,12 +20,10 @@ import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
-import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,10 +64,7 @@ public class FairyServiceImpl implements FairyService {
 
             return ResponseHandler.create200Response(response, responseData);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.create500Error(response, e);
         }
     }
 
@@ -85,15 +80,9 @@ public class FairyServiceImpl implements FairyService {
 
             return ResponseHandler.create200Response(response, approximateStory);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.create500Error(response, e);
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.create400Error(response, e);
         }
     }
 
@@ -104,7 +93,7 @@ public class FairyServiceImpl implements FairyService {
         TemporaryFairy temporaryFairy = saveTemporary(scenarioDto);
 
         try {
-            responseJSON = processScenario(scenarioDto, temporaryFairy);
+            responseJSON = processScenario(scenarioDto);
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
 
@@ -117,7 +106,6 @@ public class FairyServiceImpl implements FairyService {
         } catch (RuntimeException e) {
             return ResponseHandler.create500Error(response, e);
         }
-        return new ResponseEntity(response, HttpStatus.OK);
 
     }
 
@@ -149,7 +137,7 @@ public class FairyServiceImpl implements FairyService {
             List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
             chapterService.updateTemporary(chapters, chaptersDto.getChapters());
 
-            return ResponseHandler.create202Response(response);
+            return ResponseHandler.create204Response(response, "임시 저장 완료");
         } catch (RuntimeException e) {
             return ResponseHandler.create400Error(response, e);
         } catch (Exception e) {
@@ -237,7 +225,7 @@ public class FairyServiceImpl implements FairyService {
         return savedFairy;
     }
 
-    private JSONObject processScenario(ScenarioDto scenarioDto, TemporaryFairy temporaryFairy) {
+    private JSONObject processScenario(ScenarioDto scenarioDto) {
         String scenarioPrompt = getScenarioPrompt(scenarioDto);
         String openaiResponse = openaiService.connectGpt(scenarioPrompt);
         return Parser.parseContent(openaiResponse);
