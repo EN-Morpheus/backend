@@ -2,13 +2,20 @@ package com.imaginecup.morpheus.fairy.service;
 
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
+import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
+import com.imaginecup.morpheus.fairy.dao.TemporaryFairyRepository;
+import com.imaginecup.morpheus.fairy.domain.FairyInfo;
+import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
+import com.imaginecup.morpheus.member.dao.MemberRepository;
+import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
 import com.imaginecup.morpheus.utils.Parser;
+import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
@@ -33,6 +40,8 @@ public class FairyServiceImpl implements FairyService {
 
     private final OpenaiService openaiService;
     private final CharacterRepository characterRepository;
+    private final MemberRepository memberRepository;
+    private final TemporaryFairyRepository temporaryFairyRepository;
 
     @Override
     public List<String> getRandomTopics() {
@@ -93,7 +102,8 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity getScenario(ScenarioDto scenarioDto) {
         Response response = new Response();
         JSONObject responseJSON = null;
-        List<ChapterDto> chapters;
+
+        TemporaryFairy temporaryFairy = saveTemporary(scenarioDto);
 
         try {
             String scenarioPrompt = getScenarioPrompt(scenarioDto);
@@ -101,9 +111,10 @@ public class FairyServiceImpl implements FairyService {
 
             responseJSON = Parser.parseContent(openaiResponse);
 
-            System.out.println(responseJSON);
-
-            chapters = Parser.convertJsonObject(responseJSON);
+            Chapters chapters = Chapters.builder()
+                    .temporaryFairyId(temporaryFairy.getId())
+                    .chapters(Parser.convertJsonObject(responseJSON))
+                    .build();
 
             response.of("result", "SUCCESS");
             response.of("code", chapters);
@@ -115,7 +126,10 @@ public class FairyServiceImpl implements FairyService {
 
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalArgumentException e) {
-            chapters = Parser.convertJsonArray(responseJSON);
+            Chapters chapters = Chapters.builder()
+                    .chapters(Parser.convertJsonArray(responseJSON))
+                    .temporaryFairyId(temporaryFairy.getId())
+                    .build();
 
             response.of("result", "SUCCESS");
             response.of("code", chapters);
@@ -201,6 +215,27 @@ public class FairyServiceImpl implements FairyService {
         }
 
         return character.get();
+    }
+
+    private Member findMember(String memberId) {
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+
+        return member.get();
+    }
+
+    private TemporaryFairy saveTemporary(ScenarioDto scenarioDto) {
+        FairyInfo fairyInfo = FairyInfo.builder()
+                .member(findMember(SecurityUtils.getCurrentMemberId()))
+                .plot(scenarioDto.getPlot())
+                .title(scenarioDto.getTitle())
+                .build();
+
+        TemporaryFairy temporaryFairy = TemporaryFairy.builder()
+                .fairyInfo(fairyInfo)
+                .build();
+        TemporaryFairy savedFairy = temporaryFairyRepository.save(temporaryFairy);
+
+        return savedFairy;
     }
 
 }

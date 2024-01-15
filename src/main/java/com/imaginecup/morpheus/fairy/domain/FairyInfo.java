@@ -2,13 +2,11 @@ package com.imaginecup.morpheus.fairy.domain;
 
 import com.imaginecup.morpheus.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Embeddable
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class FairyInfo {
