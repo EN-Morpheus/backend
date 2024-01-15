@@ -33,11 +33,7 @@ public class FairyController {
     public ResponseEntity lookupRandomTopics() {
         List<String> topics = fairyService.getRandomTopics();
 
-        Response response = new Response();
-        response.of("result", "SUCCESS");
-        response.of("code", topics);
-
-        return new ResponseEntity(response, HttpStatus.OK);
+        return ResponseHandler.create200Response(new Response(), topics);
     }
 
     @Operation(summary = "주제 가공")
