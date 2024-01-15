@@ -47,13 +47,12 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters){
-        int order = 1;
         for (ChapterDto chapterDto : chapters) {
             Chapter chapter = Chapter.builder()
                     .plot(chapterDto.getPlot())
                     .background(chapterDto.getBackground())
                     .story(chapterDto.getStory())
-                    .order(order++)
+                    .order(chapterDto.getOrder())
                     .image(null)
                     .narrativeText(chapterDto.getNarrativeText())
                     .temporaryFairy(temporaryFairy)
