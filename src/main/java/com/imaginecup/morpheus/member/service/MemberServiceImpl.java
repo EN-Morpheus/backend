@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.member.service;
 
+import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.Authority;
 import com.imaginecup.morpheus.member.dto.request.JoinDto;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
@@ -95,8 +96,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void logout(String id) {
-        refreshTokenRepository.findByKey(id)
+    public void logout() {
+        refreshTokenRepository.findByKey(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         refreshTokenRepository::delete,
                         () -> {

@@ -55,10 +55,10 @@ public class MemberController {
 
     @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
-    public ResponseEntity<Response> logout(@RequestParam("id") String id) {
+    public ResponseEntity<Response> logout() {
         Response response = new Response();
         try {
-            memberService.logout(id);
+            memberService.logout();
 
             return ResponseHandler.create204Response(response, "로그아웃되었습니다.");
         } catch (RuntimeException e) {

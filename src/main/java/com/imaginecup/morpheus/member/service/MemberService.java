@@ -10,7 +10,7 @@ public interface MemberService {
     TokenInfo login(String memberId, String password);
     Response join(JoinDto joinDto);
     TokenInfo reissue(ReissuedTokenDto reissuedTokenDto);
-    void logout(String id);
+    void logout();
 
 
 }
