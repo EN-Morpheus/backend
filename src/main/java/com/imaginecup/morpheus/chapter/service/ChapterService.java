@@ -16,6 +16,6 @@ public interface ChapterService {
 
     void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters);
 
-    Chapter updateTemporary(TemporaryFairy temporaryFairy, List<Chapter> chapters) throws Exception;
+    List<Chapter> updateTemporary(List<Chapter> chapters, List<ChapterDto> chapterDtos) throws Exception;
 
 }

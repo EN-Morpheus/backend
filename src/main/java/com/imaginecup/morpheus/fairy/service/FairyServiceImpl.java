@@ -64,10 +64,7 @@ public class FairyServiceImpl implements FairyService {
             JSONObject responseJson = Parser.parseContent(openaiResponse);
             responseData.put("topic", responseJson.get("topic"));
 
-            response.of("result", "SUCCESS");
-            response.of("code", responseData);
-
-            return new ResponseEntity(response, HttpStatus.OK);
+            return ResponseHandler.create200Response(response, responseData);
         } catch (RestClientException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
@@ -86,10 +83,7 @@ public class FairyServiceImpl implements FairyService {
             JSONObject responseJson = Parser.parseContent(openaiResponse);
             ApproximateStoryDto approximateStory = new ApproximateStoryDto(responseJson);
 
-            response.of("result", "SUCCESS");
-            response.of("code", approximateStory);
-
-            return new ResponseEntity(response, HttpStatus.OK);
+            return ResponseHandler.create200Response(response, approximateStory);
         } catch (RestClientException e) {
             response.of("result", "FAIL");
             response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
@@ -114,14 +108,12 @@ public class FairyServiceImpl implements FairyService {
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
 
-            response.of("result", "SUCCESS");
-            response.of("code", chapters);
+            return ResponseHandler.create200Response(response, chapters);
         } catch (RestClientException e) {
             return ResponseHandler.create500Error(response, e);
         } catch (IllegalArgumentException e) {
             Chapters chapters = chapterService.saveChaptersJsonArray(temporaryFairy.getId(), responseJSON);
-            response.of("result", "SUCCESS");
-            response.of("code", chapters);
+            return ResponseHandler.create200Response(response, chapters);
         } catch (RuntimeException e) {
             return ResponseHandler.create500Error(response, e);
         }
@@ -154,9 +146,8 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity saveTemporaryFairy(Chapters chaptersDto) {
         Response response = new Response();
         try {
-            TemporaryFairy temporaryFairy = findTemporaryFairy(chaptersDto.getTemporaryFairyId());
             List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
-            chapterService.updateTemporary(temporaryFairy, chapters);
+            chapterService.updateTemporary(chapters, chaptersDto.getChapters());
 
             return ResponseHandler.create202Response(response);
         } catch (RuntimeException e) {

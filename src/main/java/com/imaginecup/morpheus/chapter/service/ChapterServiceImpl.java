@@ -46,7 +46,7 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters){
+    public void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters) {
         for (ChapterDto chapterDto : chapters) {
             Chapter chapter = Chapter.builder()
                     .plot(chapterDto.getPlot())
@@ -62,14 +62,14 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public Chapter updateTemporary(List<Chapter> chapters, List<ChapterDto chapterDtos>) throws Exception {
+    public List<Chapter> updateTemporary(List<Chapter> chapters, List<ChapterDto> chapterDtos) throws Exception {
         Long temporaryId = chapters.get(0).getTemporaryFairy().getId();
 
-        for(int i=0;i<chapters.size();i++) {
-            Picture picture = saveChapterImage(chapterDtos.get(i).getImageUrl(), i+1, temporaryId);
-            chapters.get(i).setImage();
+        for (int i = 0; i < chapters.size(); i++) {
+            Picture picture = saveChapterImage(chapterDtos.get(i).getImageUrl(), i + 1, temporaryId);
+            chapters.get(i).setImage(picture);
         }
-        return null;
+        return chapters;
     }
 
     private Picture saveChapterImage(String imageUrl, int order, Long temporaryId) throws Exception {
