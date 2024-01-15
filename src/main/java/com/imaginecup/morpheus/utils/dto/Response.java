@@ -14,10 +14,10 @@ public class Response {
         response = new HashMap<>();
     }
 
-    public void of(String value1, Object value2) {
+    public static void of(String value1, Object value2) {
         response.put(value1, value2);
     }
 
-    private Map<String, Object> response;
+    private static Map<String, Object> response;
 
 }

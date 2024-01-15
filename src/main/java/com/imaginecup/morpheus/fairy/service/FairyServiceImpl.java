@@ -3,6 +3,7 @@ package com.imaginecup.morpheus.fairy.service;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
+import com.imaginecup.morpheus.chapter.service.ChapterService;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
 import com.imaginecup.morpheus.fairy.dao.TemporaryFairyRepository;
@@ -20,6 +21,7 @@ import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.RandomTopic;
 import com.imaginecup.morpheus.utils.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.dto.Response;
+import com.imaginecup.morpheus.utils.exception.ExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ public class FairyServiceImpl implements FairyService {
     private final CharacterRepository characterRepository;
     private final MemberRepository memberRepository;
     private final TemporaryFairyRepository temporaryFairyRepository;
+    private final ChapterService chapterService;
 
     @Override
     public List<String> getRandomTopics() {
@@ -102,45 +105,24 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity getScenario(ScenarioDto scenarioDto) {
         Response response = new Response();
         JSONObject responseJSON = null;
-
         TemporaryFairy temporaryFairy = saveTemporary(scenarioDto);
 
         try {
-            String scenarioPrompt = getScenarioPrompt(scenarioDto);
-            String openaiResponse = openaiService.connectGpt(scenarioPrompt);
-
-            responseJSON = Parser.parseContent(openaiResponse);
-
-            Chapters chapters = Chapters.builder()
-                    .temporaryFairyId(temporaryFairy.getId())
-                    .chapters(Parser.convertJsonObject(responseJSON))
-                    .build();
-
+            responseJSON = processScenario(scenarioDto, temporaryFairy);
+            Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             response.of("result", "SUCCESS");
             response.of("code", chapters);
-
-            return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ExceptionHandler.create500Error(response, e);
         } catch (IllegalArgumentException e) {
-            Chapters chapters = Chapters.builder()
-                    .chapters(Parser.convertJsonArray(responseJSON))
-                    .temporaryFairyId(temporaryFairy.getId())
-                    .build();
-
+            Chapters chapters = chapterService.saveChaptersJsonArray(temporaryFairy.getId(), responseJSON);
             response.of("result", "SUCCESS");
             response.of("code", chapters);
-
-            return new ResponseEntity(response, HttpStatus.OK);
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ExceptionHandler.create500Error(response, e);
         }
+        return new ResponseEntity(response, HttpStatus.OK);
+
     }
 
     @Override
@@ -261,6 +243,12 @@ public class FairyServiceImpl implements FairyService {
         TemporaryFairy savedFairy = temporaryFairyRepository.save(temporaryFairy);
 
         return savedFairy;
+    }
+
+    private JSONObject processScenario(ScenarioDto scenarioDto, TemporaryFairy temporaryFairy) {
+        String scenarioPrompt = getScenarioPrompt(scenarioDto);
+        String openaiResponse = openaiService.connectGpt(scenarioPrompt);
+        return Parser.parseContent(openaiResponse);
     }
 
 }
