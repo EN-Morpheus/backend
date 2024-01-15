@@ -3,6 +3,7 @@ package com.imaginecup.morpheus.member.api;
 import com.imaginecup.morpheus.member.dto.request.JoinDto;
 import com.imaginecup.morpheus.member.dto.request.LoginDto;
 import com.imaginecup.morpheus.member.service.MemberService;
+import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import com.imaginecup.morpheus.utils.token.dto.request.ReissuedTokenDto;
 import com.imaginecup.morpheus.utils.token.dto.response.TokenInfo;
 import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
@@ -30,16 +31,14 @@ public class MemberController {
         TokenInfo tokenInfo = memberService.login(memberId, password);
 
         Response response = new Response();
-        response.of("result", "SUCCESS");
-        response.of("token", tokenInfo);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseHandler.create200Response(response, tokenInfo);
     }
 
     @Operation(summary = "회원 가입")
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody JoinDto joinDto) {
-        Response response =  memberService.join(joinDto);
+        Response response = memberService.join(joinDto);
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
@@ -60,13 +59,10 @@ public class MemberController {
         Response response = new Response();
         try {
             memberService.logout(id);
-            response.of("result", "SUCCESS");
-            response.of("code", DetailResponse.builder().code(202).message("로그아웃되었습니다.").build());
-            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+
+            return ResponseHandler.create204Response(response, "로그아웃되었습니다.");
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message("유효하지 않은 ID입니다").build());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.create404Error(response, new IllegalArgumentException("유효하지 않은 ID입니다"));
         }
     }
 
