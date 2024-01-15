@@ -22,4 +22,6 @@ public interface FairyService {
 
     ResponseEntity saveTemporaryFairy(Chapters chapters);
 
+    ResponseEntity deleteTemporaryFairy(Chapters chapters);
+
 }

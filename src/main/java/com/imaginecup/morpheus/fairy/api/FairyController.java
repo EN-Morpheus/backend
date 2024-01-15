@@ -65,4 +65,10 @@ public class FairyController {
         return fairyService.saveTemporaryFairy(chapters);
     }
 
+    @Operation(summary = "임시 저장 데이터 삭제")
+    @DeleteMapping("temporary/delete")
+    public ResponseEntity deleteTemporary(@RequestBody Chapters chapters) {
+        return fairyService.deleteTemporaryFairy(chapters);
+    }
+
 }
