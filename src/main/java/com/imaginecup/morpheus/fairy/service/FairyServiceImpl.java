@@ -161,6 +161,8 @@ public class FairyServiceImpl implements FairyService {
             return ResponseHandler.create202Response(response);
         } catch (RuntimeException e) {
             return ResponseHandler.create400Error(response, e);
+        } catch (Exception e) {
+            return ResponseHandler.create500Error(response, new RuntimeException("파일을 생성하는 데 실패했습니다."));
         }
     }
 

@@ -4,14 +4,12 @@ import com.imaginecup.morpheus.fairy.domain.Fairy;
 import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import com.imaginecup.morpheus.picture.domain.Picture;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 @Entity
 public class Chapter {

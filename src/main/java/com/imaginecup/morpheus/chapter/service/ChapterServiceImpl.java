@@ -62,7 +62,13 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public Chapter updateTemporary(TemporaryFairy temporaryFairy, List<Chapter> chapters) {
+    public Chapter updateTemporary(List<Chapter> chapters, List<ChapterDto chapterDtos>) throws Exception {
+        Long temporaryId = chapters.get(0).getTemporaryFairy().getId();
+
+        for(int i=0;i<chapters.size();i++) {
+            Picture picture = saveChapterImage(chapterDtos.get(i).getImageUrl(), i+1, temporaryId);
+            chapters.get(i).setImage();
+        }
         return null;
     }
 
