@@ -1,8 +1,6 @@
 package com.imaginecup.morpheus.utils.response.dto;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
