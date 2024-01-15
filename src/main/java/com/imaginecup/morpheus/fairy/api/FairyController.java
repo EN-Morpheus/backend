@@ -1,6 +1,7 @@
 package com.imaginecup.morpheus.fairy.api;
 
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
+import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
@@ -56,6 +57,12 @@ public class FairyController {
     @PostMapping("/chapter-image")
     public ResponseEntity getChapterImage(@RequestBody ChapterImageGeneratorDto chapterImageGeneratorDto) {
         return fairyService.getChapterImage(chapterImageGeneratorDto);
+    }
+
+    @Operation(summary = "임시 저장")
+    @PostMapping("/temporary/save")
+    public ResponseEntity saveTemporary(@RequestBody Chapters chapters){
+        return fairyService.saveTemporaryFairy(chapters);
     }
 
 }

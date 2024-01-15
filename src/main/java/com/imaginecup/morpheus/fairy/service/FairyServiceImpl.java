@@ -173,6 +173,11 @@ public class FairyServiceImpl implements FairyService {
         }
     }
 
+    @Override
+    public ResponseEntity saveTemporaryFairy(Chapters chapters) {
+        return null;
+    }
+
     private String getPlotPrompt(PlotDto plotDto) {
         Character character = findCharacter(plotDto.getCharacterId());
 
