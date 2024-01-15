@@ -106,7 +106,6 @@ public class FairyServiceImpl implements FairyService {
         } catch (RuntimeException e) {
             return ResponseHandler.create500Error(response, e);
         }
-
     }
 
     @Override
@@ -134,7 +133,7 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity saveTemporaryFairy(Chapters chaptersDto) {
         Response response = new Response();
         try {
-            List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
+            List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(chaptersDto.getTemporaryFairyId());
             chapterService.updateTemporary(chapters, chaptersDto.getChapters());
 
             return ResponseHandler.create204Response(response, "임시 저장 완료");
@@ -147,7 +146,11 @@ public class FairyServiceImpl implements FairyService {
 
     @Override
     public ResponseEntity deleteTemporaryFairy(Chapters chapters) {
-        return null;
+        TemporaryFairy temporaryFairy = findTemporaryFairy(chapters.getTemporaryFairyId());
+        chapterService.deleteChapter(temporaryFairy.getId());
+        temporaryFairyRepository.delete(temporaryFairy);
+
+        return ResponseHandler.create204Response(new Response(), "삭제 완료");
     }
 
     private String getPlotPrompt(PlotDto plotDto) {

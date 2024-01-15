@@ -6,6 +6,7 @@ import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import com.imaginecup.morpheus.picture.domain.Picture;
+import com.imaginecup.morpheus.picture.service.PictureService;
 import com.imaginecup.morpheus.s3.service.S3Service;
 import com.imaginecup.morpheus.utils.ImageSaver;
 import com.imaginecup.morpheus.utils.Parser;
@@ -25,6 +26,7 @@ public class ChapterServiceImpl implements ChapterService {
 
     private final ChapterRepository chapterRepository;
     private final S3Service s3Service;
+    private final PictureService pictureService;
 
 
     @Override
@@ -70,6 +72,19 @@ public class ChapterServiceImpl implements ChapterService {
             chapters.get(i).setImage(picture);
         }
         return chapters;
+    }
+
+    @Override
+    public void deleteChapter(Long temporaryId) {
+        List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(temporaryId);
+
+        for (Chapter chapter : chapters) {
+            if (chapter.getImage() == null) {
+                continue;
+            }
+            pictureService.deletePicture(chapter.getImage());
+            chapterRepository.delete(chapter);
+        }
     }
 
     private Picture saveChapterImage(String imageUrl, int order, Long temporaryId) throws Exception {
