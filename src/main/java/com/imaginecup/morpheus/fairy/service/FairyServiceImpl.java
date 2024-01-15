@@ -1,5 +1,7 @@
 package com.imaginecup.morpheus.fairy.service;
 
+import com.imaginecup.morpheus.chapter.dao.ChapterRepository;
+import com.imaginecup.morpheus.chapter.domain.Chapter;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
@@ -45,6 +47,7 @@ public class FairyServiceImpl implements FairyService {
     private final MemberRepository memberRepository;
     private final TemporaryFairyRepository temporaryFairyRepository;
     private final ChapterService chapterService;
+    private final ChapterRepository chapterRepository;
 
     @Override
     public List<String> getRandomTopics() {
@@ -150,12 +153,12 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public ResponseEntity saveTemporaryFairy(Chapters chapters) {
-        TemporaryFairy temporaryFairy = findTemporaryFairy(chapters.getTemporaryFairyId());
-        FairyInfo fairyInfo = FairyInfo.builder()
-                .
-                .build();
+    public ResponseEntity saveTemporaryFairy(Chapters chaptersDto) {
+        List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
 
+        for(Chapter chapter : chapters) {
+            chapterRepository.save(ch)
+        }
         return null;
     }
 
