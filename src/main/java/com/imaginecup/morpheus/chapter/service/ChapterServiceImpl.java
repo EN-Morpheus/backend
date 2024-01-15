@@ -45,14 +45,12 @@ public class ChapterServiceImpl implements ChapterService {
     public void saveFirstTemporary(TemporaryFairy temporaryFairy, Chapters chapters) throws Exception {
         int order = 1;
         for (ChapterDto chapterDto : chapters.getChapters()) {
-            Picture picture = saveChapterImage(chapterDto.getImageUrl(), order, temporaryFairy.getId());
-
             Chapter chapter = Chapter.builder()
                     .plot(chapterDto.getPlot())
                     .background(chapterDto.getBackground())
                     .story(chapterDto.getStory())
                     .order(order++)
-                    .image(picture)
+                    .image(null)
                     .narrativeText(chapterDto.getNarrativeText())
                     .temporaryFairy(temporaryFairy)
                     .build();
@@ -82,6 +80,5 @@ public class ChapterServiceImpl implements ChapterService {
         return String.format("The %d page of %s's %d temporary save fairy tale",
                 order, SecurityUtils.getCurrentMemberId(), temporaryId);
     }
-
 
 }
