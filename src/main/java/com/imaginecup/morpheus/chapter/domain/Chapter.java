@@ -1,6 +1,7 @@
 package com.imaginecup.morpheus.chapter.domain;
 
 import com.imaginecup.morpheus.fairy.domain.Fairy;
+import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import com.imaginecup.morpheus.picture.domain.Picture;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,11 @@ public class Chapter {
     private Picture image;
 
     @ManyToOne
-    @JoinColumn(name ="fairy_id", nullable = false)
+    @JoinColumn(name ="fairy_id")
     private Fairy fairy;
+
+    @ManyToOne
+    @JoinColumn(name = "temporary_fairy_id")
+    private TemporaryFairy temporaryFairy;
 
 }

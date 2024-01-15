@@ -175,6 +175,11 @@ public class FairyServiceImpl implements FairyService {
 
     @Override
     public ResponseEntity saveTemporaryFairy(Chapters chapters) {
+        TemporaryFairy temporaryFairy = findTemporaryFairy(chapters.getTemporaryFairyId());
+        FairyInfo fairyInfo = FairyInfo.builder()
+                .
+                .build();
+
         return null;
     }
 
@@ -231,6 +236,16 @@ public class FairyServiceImpl implements FairyService {
         Optional<Member> member = memberRepository.findByMemberId(memberId);
 
         return member.get();
+    }
+
+    private TemporaryFairy findTemporaryFairy(Long temporaryFairyId) {
+        Optional<TemporaryFairy> temporaryFairy = temporaryFairyRepository.findById(temporaryFairyId);
+
+        if (temporaryFairy.isEmpty()) {
+            throw new RuntimeException("임시 저장 데이터의 ID가 유효하지 않습니다.");
+        }
+
+        return temporaryFairy.get();
     }
 
     private TemporaryFairy saveTemporary(ScenarioDto scenarioDto) {

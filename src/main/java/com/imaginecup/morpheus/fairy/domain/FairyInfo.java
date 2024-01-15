@@ -1,11 +1,16 @@
 package com.imaginecup.morpheus.fairy.domain;
 
+import com.imaginecup.morpheus.chapter.domain.Chapter;
+import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Embeddable
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
