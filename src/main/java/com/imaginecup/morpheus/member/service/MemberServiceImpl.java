@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Response join(JoinDto joinDto) {
         Response response = new Response();
-
+        System.out.println(1);
         Member member = Member.builder().memberId(joinDto.getId()).password(passwordEncoder.encode(joinDto.getPassword())).name(joinDto.getName()).email(joinDto.getEmail()).authority(Authority.ROLE_USER).build();
 
         memberRepository.save(member);

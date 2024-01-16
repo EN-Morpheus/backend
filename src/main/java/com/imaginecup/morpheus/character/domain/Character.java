@@ -22,11 +22,11 @@ public class Character {
     private Long id;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String prompt;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String revisedPrompt;
 
     @Column(nullable = false)

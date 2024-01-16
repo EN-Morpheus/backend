@@ -60,15 +60,15 @@ public class CharacterServiceImpl implements CharacterService {
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.getImage(imageFile, savedCharacter.getName());
+                            Picture image = s3Service.getImage(imageFile, savedCharacter.getCharacterCreationForm().getName());
 
                             Character character = Character.builder()
+                                    .name(savedCharacter.getCharacterCreationForm().getName())
                                     .member(member)
                                     .picture(image)
                                     .introduction(savedCharacter.getCharacterCreationForm().getIntroduction())
                                     .personality(savedCharacter.getCharacterCreationForm().getPersonality())
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
-                                    .name(savedCharacter.getName())
                                     .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
                                     .style(savedCharacter.getCharacterCreationForm().getStyle())
                                     .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
@@ -118,7 +118,12 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
         String imageBody = openaiService.generatePicture(prompt);
+
+        System.out.println(imageBody);
+
         List<Object> imageData = Parser.extractDataFromResponse(imageBody);
+
+        System.out.println(imageData);
 
         Map<String, Object> imageDataMap = new HashMap<>();
         imageDataMap.put("data", imageData);
