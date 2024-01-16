@@ -6,6 +6,7 @@ import com.imaginecup.morpheus.picture.domain.Picture;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Table(name = "chapters")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -38,7 +39,7 @@ public class Chapter {
     private Picture image;
 
     @ManyToOne
-    @JoinColumn(name ="fairy_id")
+    @JoinColumn(name = "fairy_id")
     private Fairy fairy;
 
     @ManyToOne

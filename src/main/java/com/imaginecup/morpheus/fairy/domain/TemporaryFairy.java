@@ -3,6 +3,7 @@ package com.imaginecup.morpheus.fairy.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Table(name="temporary_fairys")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
