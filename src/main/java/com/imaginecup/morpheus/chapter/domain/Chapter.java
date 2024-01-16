@@ -32,7 +32,7 @@ public class Chapter {
     private String narrativeText;
 
     @Column(nullable = false)
-    private int order;
+    private int chapterOrder;
 
     @OneToOne
     @JoinColumn(name = "picture_id")

@@ -54,7 +54,7 @@ public class ChapterServiceImpl implements ChapterService {
                     .plot(chapterDto.getPlot())
                     .background(chapterDto.getBackground())
                     .story(chapterDto.getStory())
-                    .order(chapterDto.getOrder())
+                    .chapterOrder(chapterDto.getOrder())
                     .image(null)
                     .narrativeText(chapterDto.getNarrativeText())
                     .temporaryFairy(temporaryFairy)
