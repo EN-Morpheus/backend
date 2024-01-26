@@ -2,7 +2,19 @@ package com.imaginecup.morpheus.utils.constant;
 
 public enum Prompt {
 
-    SAVE_CHARACTER_PROMPT("Create an image showing the upper body of a {{girl, boy, animal}} with {{fur description}}, {{animation style}}. He is wearing {{clothes}} and is positioned like an ID photo, looking straight ahead, with the image framed from his chest up to the top of his head. The charactrer should have a youthful and energetic look. He has {{eyes description}}. He is sitting in a lush green forest with sunlight filtering through the trees, and the image should be vibrant and colorful, showcasing modern animation techniques with warmth, roundness, and lifelike textures. There should be no text or letters in the image and only one character should be included. It is essential that the image contains only one character and is completely free of any text to maintain a clean and focused visual.  Create an image with a single character only. Please generate an image that features exactly one character. Include only one individual in the image. I hope the character isn’t turned into a live-action version. Do not alter the character's prompt and please draw the above scene."),
+    SAVE_CHARACTER_PROMPT("Create an image showing the upper body of a %s with %s, %s.\n" +
+            "He is wearing %s and is positioned like an ID photo, looking straight ahead, with the image framed from his chest up to the top of his head.\n" +
+            "The charactrer should have a %s look.\n" +
+            "He has %s.\n" +
+            "He is sitting in a lush green forest with sunlight filtering through the trees.\n" +
+            "%s" +
+            "There should be no text or letters in the image and only one character should be included." +
+            "It is essential that the image contains only one character and is completely free of any text to maintain a clean and focused visual." +
+            "Create an image with a single character only." +
+            "Please generate an image that features exactly one character." +
+            "Include only one individual in the image." +
+            "I hope the character isn’t turned into a live-action version." +
+            "Do not alter the character's prompt and please draw the above scene."),
     USER_TOPIC("From now on, please specify the fairy tale topic entered by the user by referring to the guidelines below.\n" +
             "And please provide the response values according to the following conditions.\n" +
             "Condition 1: Please provide only materialized topics in json file format without any other text.\n" +

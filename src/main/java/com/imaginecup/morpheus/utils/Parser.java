@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
+import com.imaginecup.morpheus.utils.constant.AnimationStyle;
 import com.imaginecup.morpheus.utils.constant.Prompt;
+import com.imaginecup.morpheus.utils.constant.StyleDescription;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,10 +17,13 @@ import java.util.List;
 public class Parser {
 
     public static String parseSaveCharacterPrompt(CharacterCreationForm characterCreationForm) {
+        String animationStyle = AnimationStyle.getStyleByName(characterCreationForm.getAnimationStyle());
+        String styleDescription = StyleDescription.getDescriptionByName(characterCreationForm.getAnimationStyle());
         String prompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
-                characterCreationForm.getStyle(),
-                characterCreationForm.getIntroduction(),
-                characterCreationForm.getAppearance());
+                characterCreationForm.getSpecies(), characterCreationForm.getFurDescription(),
+                animationStyle, characterCreationForm.getClothes(),
+                characterCreationForm.getPersonality(), characterCreationForm.getEyes(),
+                styleDescription);
 
         return prompt;
     }

@@ -70,7 +70,7 @@ public class CharacterServiceImpl implements CharacterService {
                                     .personality(savedCharacter.getCharacterCreationForm().getPersonality())
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
                                     .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
-                                    .style(savedCharacter.getCharacterCreationForm().getStyle())
+                                    .style(savedCharacter.getCharacterCreationForm().getAnimationStyle())
                                     .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
                                     .build();
 
