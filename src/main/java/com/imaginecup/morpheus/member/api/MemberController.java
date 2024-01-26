@@ -6,7 +6,6 @@ import com.imaginecup.morpheus.member.service.MemberService;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import com.imaginecup.morpheus.utils.token.dto.request.ReissuedTokenDto;
 import com.imaginecup.morpheus.utils.token.dto.response.TokenInfo;
-import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +24,7 @@ public class MemberController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity login(@RequestBody LoginDto loginDto) {
         String memberId = loginDto.getId();
         String password = loginDto.getPassword();
         TokenInfo tokenInfo = memberService.login(memberId, password);

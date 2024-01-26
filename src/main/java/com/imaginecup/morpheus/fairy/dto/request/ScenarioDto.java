@@ -11,6 +11,5 @@ public class ScenarioDto {
     private String plot;
     private String characters;
     private String linguisticExpression;
-    private int chapterSize;
 
 }

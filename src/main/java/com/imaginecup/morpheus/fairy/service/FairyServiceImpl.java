@@ -94,6 +94,7 @@ public class FairyServiceImpl implements FairyService {
 
         try {
             responseJSON = processScenario(scenarioDto);
+            System.out.println(responseJSON);
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
 
@@ -166,7 +167,7 @@ public class FairyServiceImpl implements FairyService {
         String scenarioPrompt = String.format(Prompt.USER_SCENARIO.getPrompt(),
                 scenarioDto.getTitle(), scenarioDto.getStory(), scenarioDto.getSubjectMatter(),
                 scenarioDto.getPlot(), scenarioDto.getCharacters(),
-                scenarioDto.getLinguisticExpression(), scenarioDto.getChapterSize()
+                scenarioDto.getLinguisticExpression(), 16
         );
 
         return scenarioPrompt;
@@ -180,7 +181,7 @@ public class FairyServiceImpl implements FairyService {
 
         String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
                 chapterImageGeneratorDto.getChapterBackground(), characterPrompt,
-                chapterImageGeneratorDto.getChapterStory(), character.getPersonality(),
+                chapterImageGeneratorDto.getChapterStory(), "in the distinctive three-dimensional CGI style of Pixar animations", character.getPersonality(),
                 character.getName());
 
         return chapterImagePrompt;
@@ -229,7 +230,7 @@ public class FairyServiceImpl implements FairyService {
 
     private JSONObject processScenario(ScenarioDto scenarioDto) {
         String scenarioPrompt = getScenarioPrompt(scenarioDto);
-        String openaiResponse = openaiService.connectGpt(scenarioPrompt);
+        String openaiResponse = openaiService.connectScenarioGpt(scenarioPrompt);
         return Parser.parseContent(openaiResponse);
     }
 
