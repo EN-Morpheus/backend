@@ -94,7 +94,6 @@ public class FairyServiceImpl implements FairyService {
 
         try {
             responseJSON = processScenario(scenarioDto);
-            System.out.println(responseJSON);
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
 
