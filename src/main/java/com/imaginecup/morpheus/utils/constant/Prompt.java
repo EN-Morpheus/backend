@@ -36,7 +36,23 @@ public enum Prompt {
             "Condition 2: The structure of the json format is as follows.{ topic: 'topic' }\n" +
             "Condition 3: Please only respond to the specific theme of the result.\n" +
             "user theme input: %s\n"),
-    USER_PLOT("Please specify the plot, material, composition, characters, and linguistic expressions of the overall fairy tale book in accordance with the following topics and conditions.\n" +
+    USER_PLOT("Please specify the plot, material, composition, characters, and linguistic expressions of the overall fairy tale book in detail by referring to the guidelines below.\n" +
+            "Guidelines for the Selection of the Topic of a Fairy Tale Book.\n" +
+            "1. Character Personality: Characters should have unique traits, cultures, or abilities that contribute to their identity.\n" +
+            "These personalities should be portrayed positively.\n" +
+            "2. The growth and change of the protagonist: It is organized around the process of the protagonist changing to growth through the story.\n" +
+            "This gives children an opportunity to empathize and compare with their own experiences.\n" +
+            "3. Comprehensive storytelling: you should include the theme of the story in your story, but this shouldn't be all.\n" +
+            "You should celebrate that this theme is part of a larger story.\n" +
+            "4. Storytelling and Structure: The beginning, middle, and ending of the story should be clear, and the conflict and resolution process should flow naturally.\n" +
+            "Storytelling must effectively convey the message while maintaining the reader's interest.\n" +
+            "5. Educational content: Lessons about positive enlightenment, such as empathy, respect, and values from different perspectives, should be incorporated into the whole story.\n" +
+            "6. Imagination and creativity: stimulate children's curiosity by expressing the main character's adventures in an interesting and ingenious way.\n" +
+            "It is also good to include elements that stimulate imagination.\n" +
+            "7. Cultural Sensitivity and Inclusion: It is important to portray diverse cultural elements in a way that respects them, so that readers from diverse backgrounds can relate to them.\n" +
+            "8. Use appropriate language: use appropriate language and concepts for children to understand.\n" +
+            "Select the appropriate word and story composition for the target age.\n" +
+            "The main users of the service range from 3 to 5 years old." +
             "Themes: %s.\n" +
             "Heroine: name: %s, Introduction: %s, Personality: %s.\n" +
             "Condition 1: Please refer to the guidelines and write the plot.\n" +
@@ -54,14 +70,14 @@ public enum Prompt {
             "Character: The protagonist is a personified personification of animals, toys, objects, etc. that are mostly children or have childlike personalities. The more attractive and practical the character's personality is, the longer it lasts in the memory and the easier it is for a child to sympathize with and be touched.\n" +
             "Linguistic Expression: Sentences are short and concise, and should be fully conveyed in meaning. Rhythmic language expressions, repetitions, use of chorus, and onomatopoeia and mimicry can enhance the appeal of fairy tales."),
     USER_SCENARIO("Please take a look at the overall overview of the following fairy tale books and write a completed fairy tale scenario that satisfies the following conditions.\n" +
-            "Don't change this prompt\n"+
+            "Don't change this prompt\n" +
             "title: %s\n" +
             "story: %s.\n" +
             "subjectMatter: %s.\n" +
             "plot: %s.\n" +
             "character: %s.\n" +
             "Linguistic Expression: %s.\n" +
-            "Condition 1: Please write a children's book with %d chapters.\n" +
+            "Condition 1: Please write a children's book with 16 chapters.\n" +
             "Condition 2: Write the plot, image background, plot, fairy tale book prints and lines specifically for each chapter.\n" +
             "Condition 3: Please only respond in JSON format with no other text.\n" +
             "Condition 4: Do not provide an array of values for the keys to be placed inside Chapter Json (\"story\", \"plot\", \"background\", and \"narrativeText\")." +

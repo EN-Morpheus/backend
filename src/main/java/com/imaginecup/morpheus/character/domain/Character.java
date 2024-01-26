@@ -41,9 +41,6 @@ public class Character {
     @Column(nullable = false)
     private String animationStyle;
 
-    @Column(nullable = false)
-    private String appearance;
-
     private String species;
 
     private String furDescription;

@@ -72,7 +72,6 @@ public class CharacterServiceImpl implements CharacterService {
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
                                     .prompt(characterPrompt)
                                     .animationStyle(savedCharacter.getCharacterCreationForm().getAnimationStyle())
-                                    .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
                                     .build();
 
                             characterRepository.save(character);
@@ -120,18 +119,15 @@ public class CharacterServiceImpl implements CharacterService {
     public ResponseEntity<Response> createImage(String prompt) {
         String imageBody = openaiService.generatePicture(prompt);
 
-        System.out.println(imageBody);
-
         List<Object> imageData = Parser.extractDataFromResponse(imageBody);
 
-        System.out.println(imageData);
 
         Map<String, Object> imageDataMap = new HashMap<>();
         imageDataMap.put("data", imageData);
 
         Response response = new Response();
         response.of("result", "SUCCESS");
-        response.of("image url", imageDataMap);
+        response.of("image_url", imageDataMap);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
