@@ -18,8 +18,7 @@ import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
 import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
-import com.imaginecup.morpheus.utils.constant.Prompt;
-import com.imaginecup.morpheus.utils.constant.RandomTopic;
+import com.imaginecup.morpheus.utils.constant.*;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import lombok.RequiredArgsConstructor;
@@ -175,8 +174,7 @@ public class FairyServiceImpl implements FairyService {
     private String getChapterImagePrompt(ChapterImageGeneratorDto chapterImageGeneratorDto) {
         Character character = findCharacter(chapterImageGeneratorDto.getCharacterId());
 
-        String characterPrompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
-                character.getStyle(), character.getIntroduction(), character.getAppearance());
+        String characterPrompt = character.getPrompt();
 
         String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
                 chapterImageGeneratorDto.getChapterBackground(), characterPrompt,

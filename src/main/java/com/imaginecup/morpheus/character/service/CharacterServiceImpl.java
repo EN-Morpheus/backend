@@ -56,6 +56,7 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public Response addCharacter(SavedCharacter savedCharacter) throws Exception {
         MultipartFile imageFile = ImageSaver.downloadImageAsMultipartFile(savedCharacter.getImageUrl());
+        String characterPrompt = Parser.parseSaveCharacterPromptDB(savedCharacter.getCharacterCreationForm());
 
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
@@ -69,8 +70,8 @@ public class CharacterServiceImpl implements CharacterService {
                                     .introduction(savedCharacter.getCharacterCreationForm().getIntroduction())
                                     .personality(savedCharacter.getCharacterCreationForm().getPersonality())
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
-                                    .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
-                                    .style(savedCharacter.getCharacterCreationForm().getAnimationStyle())
+                                    .prompt(characterPrompt)
+                                    .animationStyle(savedCharacter.getCharacterCreationForm().getAnimationStyle())
                                     .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
                                     .build();
 

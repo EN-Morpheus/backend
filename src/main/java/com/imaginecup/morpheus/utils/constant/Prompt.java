@@ -3,10 +3,10 @@ package com.imaginecup.morpheus.utils.constant;
 public enum Prompt {
 
     SAVE_CHARACTER_PROMPT("Create an image showing the upper body of a %s with %s, %s.\n" +
-            "He is wearing %s and is positioned like an ID photo, looking straight ahead, with the image framed from his chest up to the top of his head.\n" +
+            "He is wearing %s %s.\n" +
             "The charactrer should have a %s look.\n" +
             "He has %s.\n" +
-            "He is sitting in a lush green forest with sunlight filtering through the trees.\n" +
+            "%s" +
             "%s" +
             "There should be no text or letters in the image and only one character should be included." +
             "It is essential that the image contains only one character and is completely free of any text to maintain a clean and focused visual." +

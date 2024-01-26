@@ -6,6 +6,7 @@ import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.AnimationStyle;
+import com.imaginecup.morpheus.utils.constant.CharacterPrompt;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.StyleDescription;
 import org.json.JSONArray;
@@ -21,9 +22,21 @@ public class Parser {
         String styleDescription = StyleDescription.getDescriptionByName(characterCreationForm.getAnimationStyle());
         String prompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
                 characterCreationForm.getSpecies(), characterCreationForm.getFurDescription(),
-                animationStyle, characterCreationForm.getClothes(),
+                animationStyle, characterCreationForm.getClothes(), CharacterPrompt.ID.getMessage(),
                 characterCreationForm.getPersonality(), characterCreationForm.getEyes(),
-                styleDescription);
+                styleDescription, CharacterPrompt.POSTURE.getMessage());
+
+        return prompt;
+    }
+
+    public static String parseSaveCharacterPromptDB(CharacterCreationForm characterPrompt) {
+        String animationStyle = AnimationStyle.getStyleByName(characterPrompt.getAnimationStyle());
+        String styleDescription = StyleDescription.getDescriptionByName(characterPrompt.getAnimationStyle());
+        String prompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
+                characterPrompt.getSpecies(), characterPrompt.getFurDescription(),
+                animationStyle, characterPrompt.getClothes(), " ",
+                characterPrompt.getPersonality(), characterPrompt.getEyes(),
+                styleDescription, " ");
 
         return prompt;
     }
