@@ -15,18 +15,27 @@ public enum Prompt {
             "Include only one individual in the image." +
             "I hope the character isn’t turned into a live-action version." +
             "Do not alter the character's prompt and please draw the above scene."),
-    USER_TOPIC("From now on, please specify the fairy tale topic entered by the user by referring to the guidelines below.\n" +
-            "And please provide the response values according to the following conditions.\n" +
-            "Condition 1: Please provide only materialized topics in json file format without any other text.\n" +
-            "Condition 2: The structure of the json format is as follows. {topic: topic}\n" +
-            "Condition 3: Please only respond to the specific topics that are the result values.\n" +
-            "Examples to specify include: before: friendship, after: diversity and inclusion: friendship of friends from different backgrounds.\n" +
-            "User Input Topic: %s.\n" +
-            "Guidelines: - Topic Exploration: Think about what you want to talk about. The topics can vary, and usually something interesting to children is good. For example, friendships, family, adventures, nature, animals, etc. can be the topics.\n" +
-            "Message definition: clarify the central message or lesson that a fairy tale book intends to convey. For example, it could be the importance of friendship, courage and confidence, and acceptance of diversity. This message should emphasize the didactic aspects of a fairy tale and be able to positively influence children.\n" +
-            "Considering Poeticity: You can also choose topics that reflect current social and cultural contexts or trends. For example, conservation or understanding of a multicultural society may be modern topics.\n" +
-            "Relationship to target audience: Consider whether the chosen topic is appropriate for the target audience, i.e., children. This should be determined by considering their age group, interests, cognitive abilities, etc.\n" +
-            "Creative approach: to approach traditional stories or lessons in a new and creative way. For example, reinterpreting classical fairy tales into modern contexts, or creating whole new characters and worlds."),
+    USER_TOPIC("Please specify the theme of the fairy tale book entered by the user by referring to the guidelines below.\n" +
+            "Here's an example.\n" +
+            "Example: before: 'Friendship', after: 'Diversity and Inclusion: Friendship of Friends from Different Backgrounds'\n" +
+            "Guidelines for the Selection of the Topic of a Fairy Tale Book.\n" +
+            "1. Topic Exploration: Topics can vary, and usually something interesting to children is good.\n" +
+            "For example, friendships, family, adventures, nature, animals, and more can be the topics.\n" +
+            "2. Message definition: clarify the central message or lesson that a fairy tale book wants to convey.\n" +
+            "For example, it could be 'the importance of friendship', 'courage and confidence', and 'acceptance of diversity'.\n" +
+            "This message should highlight the didactic aspects of fairy tales and should be able to positively influence children.\n" +
+            "3. Consider timeliness: You can also choose topics that reflect current social and cultural contexts or trends.\n" +
+            "For example, conservation or understanding of a multicultural society may be modern topics.\n" +
+            "4. Association with the target audience: Consider whether the selected topic is suitable for the target audience, that is, children.\n" +
+            "This should be determined by considering their age group, interests, cognitive abilities, and more.\n" +
+            "5. Creative approach: It allows you to approach traditional stories or lessons in a new and creative way.\n" +
+            "For example, it may include reinterpreting classical fairy tales into a modern context, or creating whole new characters and worlds.\n" +
+            "6. Future-oriented: Fairy Tales should include future-oriented themes because they are literature aimed at growing children.\n" +
+            "7. Fantasy Elements: Fairy tales should present a world of fantasy as a product of imagination.\n" +
+            "Condition 1: Please provide only the embodied topics in json file format without any other text.\n" +
+            "Condition 2: The structure of the json format is as follows.{ topic: 'topic' }\n" +
+            "Condition 3: Please only respond to the specific theme of the result.\n" +
+            "user theme input: %s\n"),
     USER_PLOT("Please specify the plot, material, composition, characters, and linguistic expressions of the overall fairy tale book in accordance with the following topics and conditions.\n" +
             "Themes: %s.\n" +
             "Heroine: name: %s, Introduction: %s, Personality: %s.\n" +
