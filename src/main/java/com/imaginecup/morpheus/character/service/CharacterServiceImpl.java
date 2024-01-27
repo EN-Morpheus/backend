@@ -90,14 +90,16 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> lookup() {
         Response respone = new Response();
-        respone.of("result", "SUCCESS");
 
         List<Character> characters = characterRepository.findByMemberMemberId(SecurityUtils.getCurrentMemberId());
 
         if (characters.size() == 0) {
+            respone.of("result", "FAIL");
             respone.of("error", DetailResponse.builder().code(202).message("조회 가능한 캐릭터가 없습니다.").build());
             return new ResponseEntity<>(respone, HttpStatus.ACCEPTED);
         }
+
+        respone.of("result", "SUCCESS");
 
         List<CharacterInfo> characterList = new ArrayList<>();
         for (Character character : characters) {
