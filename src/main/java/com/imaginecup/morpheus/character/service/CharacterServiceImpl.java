@@ -72,6 +72,10 @@ public class CharacterServiceImpl implements CharacterService {
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
                                     .prompt(characterPrompt)
                                     .animationStyle(savedCharacter.getCharacterCreationForm().getAnimationStyle())
+                                    .clothes(savedCharacter.getCharacterCreationForm().getClothes())
+                                    .eyes(savedCharacter.getCharacterCreationForm().getEyes())
+                                    .furDescription(savedCharacter.getCharacterCreationForm().getFurDescription())
+                                    .species(savedCharacter.getCharacterCreationForm().getSpecies())
                                     .build();
 
                             characterRepository.save(character);
