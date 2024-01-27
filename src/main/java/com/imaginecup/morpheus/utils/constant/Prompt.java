@@ -69,7 +69,17 @@ public enum Prompt {
             "Plot: Configuration refers to the way a story unfolds. There are many different compositional schemes, such as Listing (pre-conversion), Accumulation (addition of repetition and elements over time), Serial (event development of cause and effect), Circular (in which the story returns to square one), and Illustration (introduction of multiple anecdotes and events without inter-event relevance).\n" +
             "Character: The protagonist is a personified personification of animals, toys, objects, etc. that are mostly children or have childlike personalities. The more attractive and practical the character's personality is, the longer it lasts in the memory and the easier it is for a child to sympathize with and be touched.\n" +
             "Linguistic Expression: Sentences are short and concise, and should be fully conveyed in meaning. Rhythmic language expressions, repetitions, use of chorus, and onomatopoeia and mimicry can enhance the appeal of fairy tales."),
-    USER_SCENARIO("Please take a look at the overall overview of the following fairy tale books and write a completed fairy tale scenario that satisfies the following conditions.\n" +
+    USER_SCENARIO("Please take a look at the overall overview of the following fairy tale books and write a completed fairy tale scenario that satisfies the following conditions and guidelines below.\n" +
+            "Guidelines for the Selection of the scenario of a Fairy Tale Book.\n" +
+            "1. Connectivity between chapters: Each chapter should naturally inherit the story from the previous chapter.\n" +
+            "To do this, establish a clear link between the major events between chapters, and ensure that the flow of the story is consistent.\n" +
+            "2. Naturalness of Narrative Text: Narrative text is easy and clear for the target age.\n" +
+            "It also uses expressions that reflect the emotion and mood of the story to immerse the reader.\n" +
+            "3. Character pose concreteness: The character's pose is set in a natural and meaningful way by reflecting the situation and emotions of the story.\n" +
+            "Each chapter presents a detailed pose considering the character's actions and situations.\n" +
+            "4. Background image consistency: Select a background image that fits the mood and context of the story, and maintain the overall tone and consistency of the story.\n" +
+            "5. Plot development: Each chapter is structured in a way that the plot develops and changes as the story unfolds.\n" +
+            "Place key events and turning points in each chapter appropriately to keep the reader interested." +
             "Don't change this prompt\n" +
             "title: %s\n" +
             "story: %s.\n" +
@@ -80,7 +90,7 @@ public enum Prompt {
             "Condition 1: Please write a children's book with 16 chapters.\n" +
             "Condition 2: Write the plot, image background, plot, fairy tale book prints and lines specifically for each chapter.\n" +
             "Condition 3: Please only respond in JSON format with no other text.\n" +
-            "Condition 4: Do not provide an array of values for the keys to be placed inside Chapter Json (\"story\", \"plot\", \"background\", and \"narrativeText\")." +
+            "Condition 4: Do not provide an array of values for the keys to be placed inside Chapter Json (\"story\", \"plot\", \"background\", \"narrativeText\" \"characterPosture\")." +
             "Condition 5: Order them in ascending order from Chapter 1 and put them in JSON"),
     CHAPTER_IMAGE_GENERATOR("Please draw this character in a %s background setting.\n" +
             "Don't change this prompt\n" +
