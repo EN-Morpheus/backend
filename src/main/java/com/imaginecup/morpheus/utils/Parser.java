@@ -84,6 +84,7 @@ public class Parser {
                         .plot(chapter.getString("plot"))
                         .background(chapter.getString("background"))
                         .narrativeText(chapter.getString("narrativeText"))
+                        .characterPosture(chapter.getString("characterPosture"))
                         .order(i)
                         .imageUrl(chapter.optString("imageUrl", null))
                         .build();

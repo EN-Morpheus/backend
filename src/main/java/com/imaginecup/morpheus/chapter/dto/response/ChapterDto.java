@@ -17,6 +17,8 @@ public class ChapterDto {
 
     private String narrativeText;
 
+    private String characterPosture;
+
     private int order;
 
     private String imageUrl;
