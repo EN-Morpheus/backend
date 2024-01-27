@@ -179,8 +179,9 @@ public class FairyServiceImpl implements FairyService {
 
         String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
                 chapterImageGeneratorDto.getChapterBackground(), characterPrompt,
-                chapterImageGeneratorDto.getChapterStory(), style, character.getPersonality(),
-                character.getName());
+                chapterImageGeneratorDto.getChapterStory(), style,
+                chapterImageGeneratorDto.getCharacterPosture(),
+                character.getPersonality(), character.getName());
 
         return chapterImagePrompt;
     }

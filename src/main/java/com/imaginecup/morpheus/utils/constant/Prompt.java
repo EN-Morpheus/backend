@@ -96,6 +96,7 @@ public enum Prompt {
             "Don't change this prompt\n" +
             "character's prompt: %s\n" +
             "style of painting: %s\n" +
+            "character posture: %s\n" +
             "Condition 1: The image should not contain any letters.\n" +
             "Condition 2: Draw a level painting that fits a children's fairy tale painting.\n" +
             "Condition 3: Draw a picture that fits the %s story.\n" +
