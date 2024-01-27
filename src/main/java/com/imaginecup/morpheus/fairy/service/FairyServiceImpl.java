@@ -175,10 +175,11 @@ public class FairyServiceImpl implements FairyService {
         Character character = findCharacter(chapterImageGeneratorDto.getCharacterId());
 
         String characterPrompt = character.getPrompt();
+        String style = StyleDescription.getDescriptionByName(character.getAnimationStyle());
 
         String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
                 chapterImageGeneratorDto.getChapterBackground(), characterPrompt,
-                chapterImageGeneratorDto.getChapterStory(), "in the distinctive three-dimensional CGI style of Pixar animations", character.getPersonality(),
+                chapterImageGeneratorDto.getChapterStory(), style, character.getPersonality(),
                 character.getName());
 
         return chapterImagePrompt;

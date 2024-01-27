@@ -20,6 +20,7 @@ public class Parser {
     public static String parseSaveCharacterPrompt(CharacterCreationForm characterCreationForm) {
         String animationStyle = AnimationStyle.getStyleByName(characterCreationForm.getAnimationStyle());
         String styleDescription = StyleDescription.getDescriptionByName(characterCreationForm.getAnimationStyle());
+
         String prompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
                 characterCreationForm.getSpecies(), characterCreationForm.getFurDescription(),
                 animationStyle, characterCreationForm.getClothes(), CharacterPrompt.ID.getMessage(),
