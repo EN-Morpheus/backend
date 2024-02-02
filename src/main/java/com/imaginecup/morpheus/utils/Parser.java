@@ -127,4 +127,18 @@ public class Parser {
         return chapterList;
     }
 
+    public static ApproximateStoryDto convertJsonStory(JSONObject jsonObject) {
+        ApproximateStoryDto approximateStoryDto = ApproximateStoryDto.builder()
+                .title(jsonObject.getString("title"))
+                .story(jsonObject.getString("story"))
+                .subjectMatter(jsonObject.getString("subjectMatter"))
+                .plot(jsonObject.getString("plot"))
+                .characters(jsonObject.getString("characters"))
+                .linguisticExpression(jsonObject.getString("linguisticExpression"))
+                .build();
+
+        // 할당된 객체를 반환
+        return approximateStoryDto;
+    }
+
 }

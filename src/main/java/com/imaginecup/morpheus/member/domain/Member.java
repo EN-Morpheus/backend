@@ -33,7 +33,6 @@ public class Member {
     private Authority authority;
 
     @ColumnDefault("5")
-    @Column(nullable = false)
     private Long countOfCharacter;
 
 }

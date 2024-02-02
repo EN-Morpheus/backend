@@ -23,6 +23,9 @@ import com.imaginecup.morpheus.utils.response.dto.Response;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,8 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class FairyServiceImpl implements FairyService {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     private final OpenaiService openaiService;
     private final CharacterRepository characterRepository;
@@ -75,9 +80,12 @@ public class FairyServiceImpl implements FairyService {
             String plotPrompt = getPlotPrompt(plotDto);
             String openaiResponse = openaiService.connectGpt(plotPrompt);
             JSONObject responseJson = Parser.parseContent(openaiResponse);
-            ApproximateStoryDto approximateStory = new ApproximateStoryDto(responseJson);
+            ApproximateStoryDto approximateStory = Parser.convertJsonStory(responseJson);
 
-            return ResponseHandler.create200Response(response, approximateStory);
+            response.of("result", "SUCCESS");
+            response.of("code", approximateStory);
+
+            return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {
             return ResponseHandler.create500Error(response, e);
         } catch (RuntimeException e) {

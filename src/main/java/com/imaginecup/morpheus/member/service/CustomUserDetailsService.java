@@ -19,7 +19,6 @@ import java.util.Collections;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -34,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new User(
                 String.valueOf(member.getMemberId()),
-                member.getPassword(),
+                member.getPassword(), // 여기에서 비밀번호를 인코딩하지 않고 직접 사용합니다.
                 Collections.singleton(grantedAuthority)
         );
     }
