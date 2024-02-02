@@ -39,14 +39,8 @@ public class S3ServiceImpl implements S3Service {
             String fileName = String.format("Character %s for %s", name, SecurityUtils.getCurrentMemberId());
             String thumbnailFileName = "thumbnail_" + fileName;
 
-            uploadOriginImage(photo, fileName);
-            uploadThumbnailImage(photo, thumbnailFileName);
-
-            // 접근가능한 원본 URL 가져오기
-            String photoUrl = amazonS3.getUrl(bucket, photo.getOriginalFilename()).toString();
-
-            // 접근가능한 썸네일 URL 가져오기
-            String thumbnailUrl = amazonS3.getUrl(bucket, thumbnailFileName).toString();
+            String photoUrl=uploadOriginImage(photo, fileName);
+            String thumbnailUrl= uploadThumbnailImage(photo, thumbnailFileName);
 
             // 동시에 해당 미디어 파일들을 미디어 DB에 이름과 Url 정보 저장.
             // 게시글마다 어떤 미디어 파일들을 포함하고 있는지 파악하기 위함 또는 활용하기 위함.
@@ -84,16 +78,18 @@ public class S3ServiceImpl implements S3Service {
     }
 
 
-    private void uploadOriginImage(MultipartFile picture, String fileName) throws IOException {
+    private String uploadOriginImage(MultipartFile picture, String fileName) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(picture.getContentType());
         metadata.setContentLength(picture.getSize());
 
         // 이미지 원본 저장
         amazonS3Client.putObject(bucket, fileName, picture.getInputStream(), metadata);
+
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 
-    private void uploadThumbnailImage(MultipartFile picture, String fileName) throws IOException {
+    private String uploadThumbnailImage(MultipartFile picture, String fileName) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Thumbnails.of(picture.getInputStream()).size(100, 100).toOutputStream(os);
         byte[] thumbnailBytes = os.toByteArray();
@@ -104,6 +100,8 @@ public class S3ServiceImpl implements S3Service {
         thumbMetadata.setContentLength(thumbnailBytes.length);
 
         amazonS3Client.putObject(bucket, fileName, is, thumbMetadata);
+
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 
 }
