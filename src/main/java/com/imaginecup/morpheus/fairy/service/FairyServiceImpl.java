@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
@@ -184,6 +185,16 @@ public class FairyServiceImpl implements FairyService {
         }
     }
 
+    @Override
+    public ResponseEntity lookupMyFairy() {
+        List<Fairy> fairies = fairyRepository.findByMemberId(SecurityUtils.getCurrentMemberId());
+
+        if (fairies.size() == 0) {
+            return ResponseHandler.create204Response(new Response(), "저장된 동화가 없습니다.");
+        }
+        return ResponseHandler.create200Response(new Response(), fairies);
+    }
+
     private String getPlotPrompt(PlotDto plotDto) {
         Character character = findCharacter(plotDto.getCharacterId());
 
@@ -264,14 +275,6 @@ public class FairyServiceImpl implements FairyService {
         String scenarioPrompt = getScenarioPrompt(scenarioDto);
         String openaiResponse = openaiService.connectScenarioGpt(scenarioPrompt);
         return Parser.parseContent(openaiResponse);
-    }
-
-    private void deleteTemporaryFairyField(Long temporaryId) {
-        List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(temporaryId);
-
-        for (Chapter chapter : chapters) {
-            chapter.setFairy(null);
-        }
     }
 
     private Fairy saveFairyEntity(FairySaveFormDto saveFormDto) {

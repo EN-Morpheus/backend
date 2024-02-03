@@ -27,4 +27,6 @@ public interface FairyService {
 
     ResponseEntity saveFairy(FairySaveFormDto fairySaveFormDto);
 
+    ResponseEntity lookupMyFairy();
+
 }

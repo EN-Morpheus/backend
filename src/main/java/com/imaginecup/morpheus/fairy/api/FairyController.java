@@ -88,4 +88,10 @@ public class FairyController {
         return fairyService.saveFairy(fairySaveFormDto);
     }
 
+    @Operation(summary = "내가 제작한 동화 조회")
+    @GetMapping("lookup")
+    public ResponseEntity lookupMyFairies(){
+        return fairyService.lookupMyFairy();
+    }
+
 }
