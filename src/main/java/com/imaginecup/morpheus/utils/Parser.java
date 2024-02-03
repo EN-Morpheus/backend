@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.character.dto.request.CharacterCreationForm;
+import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.utils.constant.AnimationStyle;
 import com.imaginecup.morpheus.utils.constant.CharacterPrompt;
 import com.imaginecup.morpheus.utils.constant.Prompt;
 import com.imaginecup.morpheus.utils.constant.StyleDescription;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -139,6 +141,14 @@ public class Parser {
 
         // 할당된 객체를 반환
         return approximateStoryDto;
+    }
+
+    public static void escapeScenarioDto(ScenarioDto scenarioDto) {
+        scenarioDto.setTitle(StringEscapeUtils.escapeJson(scenarioDto.getTitle()));
+        scenarioDto.setPlot(StringEscapeUtils.escapeJson(scenarioDto.getPlot()));
+        scenarioDto.setStory(StringEscapeUtils.escapeJson(scenarioDto.getStory()));
+        scenarioDto.setSubjectMatter(StringEscapeUtils.escapeJson(scenarioDto.getSubjectMatter()));
+        scenarioDto.setLinguisticExpression(StringEscapeUtils.escapeJson(scenarioDto.getLinguisticExpression()));
     }
 
 }

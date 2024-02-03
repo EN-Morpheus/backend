@@ -80,6 +80,14 @@ public enum Prompt {
             "4. Background image consistency: Select a background image that fits the mood and context of the story, and maintain the overall tone and consistency of the story.\n" +
             "5. Plot development: Each chapter is structured in a way that the plot develops and changes as the story unfolds.\n" +
             "Place key events and turning points in each chapter appropriately to keep the reader interested." +
+            "In the beginning of the chapter, the main character who had an ordinary day should discover or meet something extraordinary to develop an exciting story, or the main character who was interested in something meets an interesting object suitable for the interest and meets an extraordinary day.\n" +
+            "The previous and later chapters should be connected with a common element. Using the fairy tale Snow White as an example, Snow White suffers from the appearance of a beautiful protagonist and a stepmother who is jealous of her beauty, but thanks to her beauty, she eventually wins happiness with the help of her helpers.\n" +
+            "It should consist of the composition of the ending, the beginning-development-crisis-the end-the-end. The beginning: the implication, the development: the occurrence of the event, the crisis: the reversal of the event, the climax: the turn of the event, the end: the outcome of the event, and all episodes should be organically composed.\n" +
+            "Detailed description: beginning: characters and backgrounds are introduced, and clues to events are presented.\n" +
+            "Deployment: Events happen and unfold.\n" +
+            "Crisis: a twist in the story is revealed and a deadly event occurs and unfolds.\n" +
+            "Peak: As a tipping point in the resolution, an anti-war element is revealed. The protagonist makes a major choice on how to solve this problem, resulting in a final conflict.\n" +
+            "Ending: The case is resolved, and the protagonist has achieved the vegetation mark.\n"+
             "Don't change this prompt\n" +
             "title: %s\n" +
             "story: %s.\n" +

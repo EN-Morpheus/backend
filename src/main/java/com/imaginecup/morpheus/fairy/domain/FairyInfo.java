@@ -17,6 +17,7 @@ import java.util.List;
 public class FairyInfo {
 
     @Column(nullable = false)
+    @Lob
     private String plot;
 
     @Column(nullable = false)

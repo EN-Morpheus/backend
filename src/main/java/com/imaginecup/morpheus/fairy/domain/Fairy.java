@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Table(name = "fairys")
 @NoArgsConstructor
@@ -19,10 +20,8 @@ public class Fairy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ColumnDefault("true")
     private boolean isPublic;
-
-    @Column(nullable = false)
-    private boolean isComplete;
 
     @Embedded
     private FairyInfo fairyInfo;

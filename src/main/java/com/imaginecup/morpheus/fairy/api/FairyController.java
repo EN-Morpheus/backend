@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.chapter.service.ChapterService;
+import com.imaginecup.morpheus.fairy.dto.request.FairySaveFormDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.service.FairyService;
@@ -79,6 +80,12 @@ public class FairyController {
         } catch (RuntimeException e) {
             return ResponseHandler.create400Error(new Response(), e);
         }
+    }
+
+    @Operation(summary = "동화 저장")
+    @PostMapping("save")
+    public ResponseEntity saveFairy(@RequestBody FairySaveFormDto fairySaveFormDto) {
+        return fairyService.saveFairy(fairySaveFormDto);
     }
 
 }
