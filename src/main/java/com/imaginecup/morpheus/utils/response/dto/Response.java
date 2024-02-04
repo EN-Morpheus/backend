@@ -2,7 +2,6 @@ package com.imaginecup.morpheus.utils.response.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +13,10 @@ public class Response {
         response = new HashMap<>();
     }
 
-    public static void of(String value1, Object value2) {
+    public void of(String value1, Object value2) {
         response.put(value1, value2);
     }
 
-    private static Map<String, Object> response;
+    private Map<String, Object> response;
 
 }

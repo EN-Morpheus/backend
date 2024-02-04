@@ -4,8 +4,10 @@ import com.imaginecup.morpheus.chapter.dao.ChapterRepository;
 import com.imaginecup.morpheus.chapter.domain.Chapter;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
+import com.imaginecup.morpheus.fairy.domain.Fairy;
 import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import com.imaginecup.morpheus.picture.domain.Picture;
+import com.imaginecup.morpheus.picture.service.PictureService;
 import com.imaginecup.morpheus.s3.service.S3Service;
 import com.imaginecup.morpheus.utils.ImageSaver;
 import com.imaginecup.morpheus.utils.Parser;
@@ -25,6 +27,7 @@ public class ChapterServiceImpl implements ChapterService {
 
     private final ChapterRepository chapterRepository;
     private final S3Service s3Service;
+    private final PictureService pictureService;
 
 
     @Override
@@ -41,7 +44,7 @@ public class ChapterServiceImpl implements ChapterService {
     public Chapters saveChaptersJsonArray(Long temporaryFairyId, JSONObject json) {
         return Chapters.builder()
                 .temporaryFairyId(temporaryFairyId)
-                .chapters(Parser.convertJsonArray((JSONObject) json))
+                .chapters(Parser.convertJsonArray(json))
                 .build();
     }
 
@@ -52,7 +55,7 @@ public class ChapterServiceImpl implements ChapterService {
                     .plot(chapterDto.getPlot())
                     .background(chapterDto.getBackground())
                     .story(chapterDto.getStory())
-                    .order(chapterDto.getOrder())
+                    .chapterOrder(chapterDto.getOrder())
                     .image(null)
                     .narrativeText(chapterDto.getNarrativeText())
                     .temporaryFairy(temporaryFairy)
@@ -72,6 +75,34 @@ public class ChapterServiceImpl implements ChapterService {
         return chapters;
     }
 
+    @Override
+    public void deleteChapter(Long temporaryId) throws NoSuchFieldException {
+        List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(temporaryId);
+
+        if (chapters.size() == 0) {
+            throw new NoSuchFieldException("임시 저장된 데이터가 아닙니다.");
+        }
+
+        for (Chapter chapter : chapters) {
+            if (chapter.getImage() == null) {
+                continue;
+            }
+            pictureService.deletePicture(chapter.getImage());
+            chapterRepository.delete(chapter);
+        }
+    }
+
+    @Override
+    public void saveCompleteFairy(List<ChapterDto> chapterDtos, Long temporaryId, Fairy fairy) throws Exception {
+        List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(temporaryId);
+        int count = 0;
+        for (Chapter chapter : chapters) {
+            deleteTemporaryimage(chapter);
+            saveFairyImage(chapter, chapterDtos.get(count++).getImageUrl(), count, fairy.getId());
+            chapter.setFairy(fairy);
+        }
+    }
+
     private Picture saveChapterImage(String imageUrl, int order, Long temporaryId) throws Exception {
         Picture picture = null;
         if (imageUrl == null) {
@@ -85,9 +116,36 @@ public class ChapterServiceImpl implements ChapterService {
         return picture;
     }
 
-    private String createChapterImageName(int order, Long temporaryId) {
-        return String.format("The %d page of %s's %d temporary save fairy tale",
-                order, SecurityUtils.getCurrentMemberId(), temporaryId);
+    public String createChapterImageName(int order, Long fairyId) {
+        return String.format("The %d page of %s's %d save fairy tale",
+                order, SecurityUtils.getCurrentMemberId(), fairyId);
+    }
+
+    private void deleteTemporaryimage(Chapter chapter) {
+        if(chapter.getImage() == null) {
+            return;
+        }
+        String url = chapter.getImage().getUrl();
+        String thumbnailUrl = chapter.getImage().getThumbnailUrl();
+        pictureService.deletePicture(chapter.getImage());
+
+        if (url != null) {
+            s3Service.deleteImage(url);
+        }
+        if (thumbnailUrl != null) {
+            s3Service.deleteImage(thumbnailUrl);
+        }
+    }
+
+    private void saveFairyImage(Chapter chapter, String imageUrl, int order, Long fairyId) throws Exception {
+        if (imageUrl == null) {
+            throw new NullPointerException("imageUrl 누락");
+        }
+
+        MultipartFile imageFile = ImageSaver.downloadImageAsMultipartFile(imageUrl);
+        String fileName = createChapterImageName(order, fairyId);
+        Picture picture = s3Service.getImage(imageFile, fileName);
+        chapter.setImage(picture);
     }
 
 }

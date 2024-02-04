@@ -3,6 +3,7 @@ package com.imaginecup.morpheus.chapter.service;
 import com.imaginecup.morpheus.chapter.domain.Chapter;
 import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
+import com.imaginecup.morpheus.fairy.domain.Fairy;
 import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
 import org.json.JSONObject;
 
@@ -17,5 +18,11 @@ public interface ChapterService {
     void saveFirstTemporary(TemporaryFairy temporaryFairy, List<ChapterDto> chapters);
 
     List<Chapter> updateTemporary(List<Chapter> chapters, List<ChapterDto> chapterDtos) throws Exception;
+
+    void deleteChapter(Long temporaryId) throws NoSuchFieldException;
+
+    String createChapterImageName(int order, Long temporaryId);
+
+    void saveCompleteFairy(List<ChapterDto> chapterDtos, Long temporaryId, Fairy fairy) throws Exception;
 
 }

@@ -20,9 +20,16 @@ public class ResponseHandler {
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 
-    public static ResponseEntity create202Response(Response response) {
+    public static ResponseEntity create404Error(Response response, Exception e) {
+        response.of("result", "FAIL");
+        response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
+
+        return new ResponseEntity(response, HttpStatus.NOT_FOUND);
+    }
+
+    public static ResponseEntity create204Response(Response response, String message) {
         response.of("result", "SUCCESS");
-        response.of("code", DetailResponse.builder().code(202).build());
+        response.of("code", DetailResponse.builder().code(204).message(message).build());
 
         return new ResponseEntity(response, HttpStatus.NO_CONTENT);
     }

@@ -6,6 +6,7 @@ import com.imaginecup.morpheus.character.dto.request.SavedCharacter;
 import com.imaginecup.morpheus.character.dto.response.CharacterInfo;
 import com.imaginecup.morpheus.character.service.CharacterService;
 import com.imaginecup.morpheus.utils.Parser;
+import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,15 +39,9 @@ public class CharacterController {
         try {
             characterService.deleteCharacter(characterId);
 
-            response.of("result", "SUCCESS");
-            response.of("code", DetailResponse.builder().code(202).message("캐릭터가 삭제되었습니다.").build());
-
-            return new ResponseEntity(response, HttpStatus.NO_CONTENT);
+            return ResponseHandler.create204Response(response, "캐릭터가 삭제되었습니다.");
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.create404Error(response, e);
         }
     }
 
@@ -57,15 +52,10 @@ public class CharacterController {
         try {
             CharacterInfo character = characterService.pickCharacter(characterId);
 
-            response.of("result", "SUCCESS");
-            response.of("code", character);
-
-            return new ResponseEntity(response, HttpStatus.OK);
+            return ResponseHandler.create200Response(response, character);
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
 
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.create404Error(response, e);
         }
     }
 

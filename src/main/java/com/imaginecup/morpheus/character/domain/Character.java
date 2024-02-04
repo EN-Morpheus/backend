@@ -22,11 +22,11 @@ public class Character {
     private Long id;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String prompt;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String revisedPrompt;
 
     @Column(nullable = false)
@@ -39,10 +39,15 @@ public class Character {
     private String introduction;
 
     @Column(nullable = false)
-    private String style;
+    private String animationStyle;
 
-    @Column(nullable = false)
-    private String appearance;
+    private String species;
+
+    private String furDescription;
+
+    private String clothes;
+
+    private String eyes;
 
     @JoinColumn(nullable = false)
     @OneToOne(cascade = CascadeType.ALL)

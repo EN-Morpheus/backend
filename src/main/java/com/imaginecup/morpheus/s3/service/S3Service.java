@@ -7,4 +7,6 @@ public interface S3Service {
 
     Picture getImage(MultipartFile media, String name);
 
+    void deleteImage(String url);
+
 }

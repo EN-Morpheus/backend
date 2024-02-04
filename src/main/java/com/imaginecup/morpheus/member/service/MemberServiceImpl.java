@@ -1,5 +1,6 @@
 package com.imaginecup.morpheus.member.service;
 
+import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.Authority;
 import com.imaginecup.morpheus.member.dto.request.JoinDto;
 import com.imaginecup.morpheus.utils.token.dto.request.ReissuedTokenDto;
@@ -53,8 +54,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Response join(JoinDto joinDto) {
         Response response = new Response();
-
-        Member member = Member.builder().memberId(joinDto.getId()).password(passwordEncoder.encode(joinDto.getPassword())).name(joinDto.getName()).email(joinDto.getEmail()).authority(Authority.ROLE_USER).build();
+        Member member = Member.builder()
+                .memberId(joinDto.getId())
+                .password(passwordEncoder.encode(joinDto.getPassword()))
+                .name(joinDto.getName())
+                .email(joinDto.getEmail())
+                .authority(Authority.ROLE_USER).build();
 
         memberRepository.save(member);
 
@@ -94,8 +99,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void logout(String id) {
-        refreshTokenRepository.findByKey(id)
+    public void logout() {
+        refreshTokenRepository.findByKey(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         refreshTokenRepository::delete,
                         () -> {

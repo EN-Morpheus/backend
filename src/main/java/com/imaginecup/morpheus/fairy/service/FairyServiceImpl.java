@@ -3,13 +3,17 @@ package com.imaginecup.morpheus.fairy.service;
 import com.imaginecup.morpheus.chapter.dao.ChapterRepository;
 import com.imaginecup.morpheus.chapter.domain.Chapter;
 import com.imaginecup.morpheus.chapter.dto.request.ChapterImageGeneratorDto;
+import com.imaginecup.morpheus.chapter.dto.response.ChapterDto;
 import com.imaginecup.morpheus.chapter.dto.response.Chapters;
 import com.imaginecup.morpheus.chapter.service.ChapterService;
 import com.imaginecup.morpheus.character.dao.CharacterRepository;
 import com.imaginecup.morpheus.character.domain.Character;
+import com.imaginecup.morpheus.fairy.dao.FairyRepository;
 import com.imaginecup.morpheus.fairy.dao.TemporaryFairyRepository;
+import com.imaginecup.morpheus.fairy.domain.Fairy;
 import com.imaginecup.morpheus.fairy.domain.FairyInfo;
 import com.imaginecup.morpheus.fairy.domain.TemporaryFairy;
+import com.imaginecup.morpheus.fairy.dto.request.FairySaveFormDto;
 import com.imaginecup.morpheus.fairy.dto.request.PlotDto;
 import com.imaginecup.morpheus.fairy.dto.request.ScenarioDto;
 import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
@@ -18,9 +22,7 @@ import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
 import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
-import com.imaginecup.morpheus.utils.constant.Prompt;
-import com.imaginecup.morpheus.utils.constant.RandomTopic;
-import com.imaginecup.morpheus.utils.response.dto.DetailResponse;
+import com.imaginecup.morpheus.utils.constant.*;
 import com.imaginecup.morpheus.utils.response.dto.Response;
 import com.imaginecup.morpheus.utils.response.ResponseHandler;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -42,11 +41,12 @@ import java.util.Optional;
 public class FairyServiceImpl implements FairyService {
 
     private final OpenaiService openaiService;
+    private final ChapterService chapterService;
     private final CharacterRepository characterRepository;
     private final MemberRepository memberRepository;
     private final TemporaryFairyRepository temporaryFairyRepository;
-    private final ChapterService chapterService;
     private final ChapterRepository chapterRepository;
+    private final FairyRepository fairyRepository;
 
     @Override
     public List<String> getRandomTopics() {
@@ -66,10 +66,7 @@ public class FairyServiceImpl implements FairyService {
 
             return ResponseHandler.create200Response(response, responseData);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.create500Error(response, e);
         }
     }
 
@@ -81,19 +78,16 @@ public class FairyServiceImpl implements FairyService {
             String plotPrompt = getPlotPrompt(plotDto);
             String openaiResponse = openaiService.connectGpt(plotPrompt);
             JSONObject responseJson = Parser.parseContent(openaiResponse);
-            ApproximateStoryDto approximateStory = new ApproximateStoryDto(responseJson);
+            ApproximateStoryDto approximateStory = Parser.convertJsonStory(responseJson);
 
-            return ResponseHandler.create200Response(response, approximateStory);
+            response.of("result", "SUCCESS");
+            response.of("code", approximateStory);
+
+            return new ResponseEntity(response, HttpStatus.OK);
         } catch (RestClientException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(500).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.create500Error(response, e);
         } catch (RuntimeException e) {
-            response.of("result", "FAIL");
-            response.of("error", DetailResponse.builder().code(404).message(e.getMessage()).build());
-
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.create400Error(response, e);
         }
     }
 
@@ -101,10 +95,12 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity getScenario(ScenarioDto scenarioDto) {
         Response response = new Response();
         JSONObject responseJSON = null;
+
+        Parser.escapeScenarioDto(scenarioDto);
         TemporaryFairy temporaryFairy = saveTemporary(scenarioDto);
 
         try {
-            responseJSON = processScenario(scenarioDto, temporaryFairy);
+            responseJSON = processScenario(scenarioDto);
             Chapters chapters = chapterService.saveChaptersJsonObject(temporaryFairy.getId(), responseJSON);
             chapterService.saveFirstTemporary(temporaryFairy, chapters.getChapters());
 
@@ -117,8 +113,6 @@ public class FairyServiceImpl implements FairyService {
         } catch (RuntimeException e) {
             return ResponseHandler.create500Error(response, e);
         }
-        return new ResponseEntity(response, HttpStatus.OK);
-
     }
 
     @Override
@@ -146,10 +140,10 @@ public class FairyServiceImpl implements FairyService {
     public ResponseEntity saveTemporaryFairy(Chapters chaptersDto) {
         Response response = new Response();
         try {
-            List<Chapter> chapters = chapterRepository.findByTemporaryFairy(chaptersDto.getTemporaryFairyId());
+            List<Chapter> chapters = chapterRepository.findByTemporaryFairyId(chaptersDto.getTemporaryFairyId());
             chapterService.updateTemporary(chapters, chaptersDto.getChapters());
 
-            return ResponseHandler.create202Response(response);
+            return ResponseHandler.create204Response(response, "임시 저장 완료");
         } catch (RuntimeException e) {
             return ResponseHandler.create400Error(response, e);
         } catch (Exception e) {
@@ -158,8 +152,62 @@ public class FairyServiceImpl implements FairyService {
     }
 
     @Override
-    public ResponseEntity deleteTemporaryFairy(Chapters chapters) {
-        return null;
+    public ResponseEntity deleteTemporaryFairy(Long temporaryFairyId) {
+        TemporaryFairy temporaryFairy = findTemporaryFairy(temporaryFairyId);
+        temporaryFairyRepository.delete(temporaryFairy);
+
+        return ResponseHandler.create204Response(new Response(), "삭제 완료");
+    }
+
+    @Override
+    public ResponseEntity saveFairy(FairySaveFormDto fairySaveFormDto) {
+        Response response = new Response();
+        try {
+            Fairy fairy = saveFairyEntity(fairySaveFormDto);
+            chapterService.saveCompleteFairy(fairySaveFormDto.getChapters(), fairySaveFormDto.getTemporaryFairyId(), fairy);
+
+            return ResponseHandler.create204Response(response, "동화 저장 완료");
+        } catch (NullPointerException e) {
+            return ResponseHandler.create404Error(response, e);
+        } catch (RuntimeException e) {
+            return ResponseHandler.create400Error(response, e);
+        } catch (Exception e) {
+            return ResponseHandler.create500Error(response, new RuntimeException("파일을 생성하는 데 실패했습니다."));
+        }
+    }
+
+    @Override
+    public ResponseEntity lookupMyFairy() {
+        List<Fairy> fairies = fairyRepository.findByMemberMemberId(SecurityUtils.getCurrentMemberId());
+
+        if (fairies.size() == 0) {
+            return ResponseHandler.create204Response(new Response(), "저장된 동화가 없습니다.");
+        }
+        return ResponseHandler.create200Response(new Response(), fairies);
+    }
+
+    @Override
+    public List<ChapterDto> chooseFairy(Long fairyId) {
+        Optional<Fairy> fairy = fairyRepository.findById(fairyId);
+
+        if (fairy.isEmpty()) {
+            throw new IllegalArgumentException("동화의 아이디가 유효하지 않습니다.");
+        }
+
+        List<Chapter> chapters = chapterRepository.findByFairyId(fairyId);
+        List<ChapterDto> chapterDtos = new ArrayList<>();
+
+        for (Chapter chapter : chapters) {
+            chapterDtos.add(ChapterDto.builder()
+                    .plot(chapter.getPlot())
+                    .story(chapter.getStory())
+                    .background(chapter.getBackground())
+                    .order(chapter.getChapterOrder())
+                    .narrativeText(chapter.getNarrativeText())
+                    .imageUrl(chapter.getImage().getUrl())
+                    .build());
+        }
+        return chapterDtos;
     }
 
     private String getPlotPrompt(PlotDto plotDto) {
@@ -176,7 +224,7 @@ public class FairyServiceImpl implements FairyService {
         String scenarioPrompt = String.format(Prompt.USER_SCENARIO.getPrompt(),
                 scenarioDto.getTitle(), scenarioDto.getStory(), scenarioDto.getSubjectMatter(),
                 scenarioDto.getPlot(), scenarioDto.getCharacters(),
-                scenarioDto.getLinguisticExpression(), scenarioDto.getChapterSize()
+                scenarioDto.getLinguisticExpression(), 16
         );
 
         return scenarioPrompt;
@@ -185,13 +233,14 @@ public class FairyServiceImpl implements FairyService {
     private String getChapterImagePrompt(ChapterImageGeneratorDto chapterImageGeneratorDto) {
         Character character = findCharacter(chapterImageGeneratorDto.getCharacterId());
 
-        String characterPrompt = String.format(Prompt.SAVE_CHARACTER_PROMPT.getPrompt(),
-                character.getStyle(), character.getIntroduction(), character.getAppearance());
+        String characterPrompt = character.getPrompt();
+        String style = StyleDescription.getDescriptionByName(character.getAnimationStyle());
 
         String chapterImagePrompt = String.format(Prompt.CHAPTER_IMAGE_GENERATOR.getPrompt(),
                 chapterImageGeneratorDto.getChapterBackground(), characterPrompt,
-                chapterImageGeneratorDto.getChapterStory(), character.getPersonality(),
-                character.getName());
+                chapterImageGeneratorDto.getChapterStory(), style,
+                chapterImageGeneratorDto.getCharacterPosture(),
+                character.getPersonality(), character.getName());
 
         return chapterImagePrompt;
     }
@@ -216,7 +265,7 @@ public class FairyServiceImpl implements FairyService {
         Optional<TemporaryFairy> temporaryFairy = temporaryFairyRepository.findById(temporaryFairyId);
 
         if (temporaryFairy.isEmpty()) {
-            throw new RuntimeException("임시 저장 데이터의 ID가 유효하지 않습니다.");
+            throw new IllegalArgumentException("임시 저장 데이터의 ID가 유효하지 않습니다.");
         }
 
         return temporaryFairy.get();
@@ -224,23 +273,31 @@ public class FairyServiceImpl implements FairyService {
 
     private TemporaryFairy saveTemporary(ScenarioDto scenarioDto) {
         FairyInfo fairyInfo = FairyInfo.builder()
-                .member(findMember(SecurityUtils.getCurrentMemberId()))
                 .plot(scenarioDto.getPlot())
                 .title(scenarioDto.getTitle())
                 .build();
 
         TemporaryFairy temporaryFairy = TemporaryFairy.builder()
                 .fairyInfo(fairyInfo)
+                .member(findMember(SecurityUtils.getCurrentMemberId()))
                 .build();
         TemporaryFairy savedFairy = temporaryFairyRepository.save(temporaryFairy);
 
         return savedFairy;
     }
 
-    private JSONObject processScenario(ScenarioDto scenarioDto, TemporaryFairy temporaryFairy) {
+    private JSONObject processScenario(ScenarioDto scenarioDto) {
         String scenarioPrompt = getScenarioPrompt(scenarioDto);
-        String openaiResponse = openaiService.connectGpt(scenarioPrompt);
+        String openaiResponse = openaiService.connectScenarioGpt(scenarioPrompt);
         return Parser.parseContent(openaiResponse);
     }
 
+    private Fairy saveFairyEntity(FairySaveFormDto saveFormDto) {
+        FairyInfo fairyInfo = FairyInfo.builder()
+                .title(saveFormDto.getTitle())
+                .plot(saveFormDto.getPlot())
+                .build();
+        Fairy fairy = Fairy.builder().fairyInfo(fairyInfo).member(findMember(SecurityUtils.getCurrentMemberId())).build();
+        return fairyRepository.save(fairy);
+    }
 }

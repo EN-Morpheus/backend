@@ -56,22 +56,26 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public Response addCharacter(SavedCharacter savedCharacter) throws Exception {
         MultipartFile imageFile = ImageSaver.downloadImageAsMultipartFile(savedCharacter.getImageUrl());
+        String characterPrompt = Parser.parseSaveCharacterPromptDB(savedCharacter.getCharacterCreationForm());
 
         memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId())
                 .ifPresentOrElse(
                         member -> {
-                            Picture image = s3Service.getImage(imageFile, savedCharacter.getName());
+                            Picture image = s3Service.getImage(imageFile, savedCharacter.getCharacterCreationForm().getName());
 
                             Character character = Character.builder()
+                                    .name(savedCharacter.getCharacterCreationForm().getName())
                                     .member(member)
                                     .picture(image)
                                     .introduction(savedCharacter.getCharacterCreationForm().getIntroduction())
                                     .personality(savedCharacter.getCharacterCreationForm().getPersonality())
                                     .revisedPrompt(savedCharacter.getRevisedPrompt())
-                                    .name(savedCharacter.getName())
-                                    .prompt(Parser.parseSaveCharacterPrompt(savedCharacter.getCharacterCreationForm()))
-                                    .style(savedCharacter.getCharacterCreationForm().getStyle())
-                                    .appearance(savedCharacter.getCharacterCreationForm().getAppearance())
+                                    .prompt(characterPrompt)
+                                    .animationStyle(savedCharacter.getCharacterCreationForm().getAnimationStyle())
+                                    .clothes(savedCharacter.getCharacterCreationForm().getClothes())
+                                    .eyes(savedCharacter.getCharacterCreationForm().getEyes())
+                                    .furDescription(savedCharacter.getCharacterCreationForm().getFurDescription())
+                                    .species(savedCharacter.getCharacterCreationForm().getSpecies())
                                     .build();
 
                             characterRepository.save(character);
@@ -90,14 +94,16 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> lookup() {
         Response respone = new Response();
-        respone.of("result", "SUCCESS");
 
         List<Character> characters = characterRepository.findByMemberMemberId(SecurityUtils.getCurrentMemberId());
 
         if (characters.size() == 0) {
+            respone.of("result", "FAIL");
             respone.of("error", DetailResponse.builder().code(202).message("조회 가능한 캐릭터가 없습니다.").build());
             return new ResponseEntity<>(respone, HttpStatus.ACCEPTED);
         }
+
+        respone.of("result", "SUCCESS");
 
         List<CharacterInfo> characterList = new ArrayList<>();
         for (Character character : characters) {
@@ -118,14 +124,16 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public ResponseEntity<Response> createImage(String prompt) {
         String imageBody = openaiService.generatePicture(prompt);
+
         List<Object> imageData = Parser.extractDataFromResponse(imageBody);
+
 
         Map<String, Object> imageDataMap = new HashMap<>();
         imageDataMap.put("data", imageData);
 
         Response response = new Response();
         response.of("result", "SUCCESS");
-        response.of("image url", imageDataMap);
+        response.of("image_url", imageDataMap);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
