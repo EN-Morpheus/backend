@@ -20,9 +20,6 @@ import com.imaginecup.morpheus.fairy.dto.response.ApproximateStoryDto;
 import com.imaginecup.morpheus.member.dao.MemberRepository;
 import com.imaginecup.morpheus.member.domain.Member;
 import com.imaginecup.morpheus.openai.service.OpenaiService;
-import com.imaginecup.morpheus.picture.domain.Picture;
-import com.imaginecup.morpheus.s3.service.S3Service;
-import com.imaginecup.morpheus.utils.ImageSaver;
 import com.imaginecup.morpheus.utils.Parser;
 import com.imaginecup.morpheus.utils.SecurityUtils;
 import com.imaginecup.morpheus.utils.constant.*;
@@ -32,16 +29,11 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -50,7 +42,6 @@ public class FairyServiceImpl implements FairyService {
 
     private final OpenaiService openaiService;
     private final ChapterService chapterService;
-    private final S3Service s3Service;
     private final CharacterRepository characterRepository;
     private final MemberRepository memberRepository;
     private final TemporaryFairyRepository temporaryFairyRepository;
@@ -187,12 +178,36 @@ public class FairyServiceImpl implements FairyService {
 
     @Override
     public ResponseEntity lookupMyFairy() {
-        List<Fairy> fairies = fairyRepository.findByMemberId(SecurityUtils.getCurrentMemberId());
+        List<Fairy> fairies = fairyRepository.findByMemberMemberId(SecurityUtils.getCurrentMemberId());
 
         if (fairies.size() == 0) {
             return ResponseHandler.create204Response(new Response(), "저장된 동화가 없습니다.");
         }
         return ResponseHandler.create200Response(new Response(), fairies);
+    }
+
+    @Override
+    public List<ChapterDto> chooseFairy(Long fairyId) {
+        Optional<Fairy> fairy = fairyRepository.findById(fairyId);
+
+        if (fairy.isEmpty()) {
+            throw new IllegalArgumentException("동화의 아이디가 유효하지 않습니다.");
+        }
+
+        List<Chapter> chapters = chapterRepository.findByFairyId(fairyId);
+        List<ChapterDto> chapterDtos = new ArrayList<>();
+
+        for (Chapter chapter : chapters) {
+            chapterDtos.add(ChapterDto.builder()
+                    .plot(chapter.getPlot())
+                    .story(chapter.getStory())
+                    .background(chapter.getBackground())
+                    .order(chapter.getChapterOrder())
+                    .narrativeText(chapter.getNarrativeText())
+                    .imageUrl(chapter.getImage().getUrl())
+                    .build());
+        }
+        return chapterDtos;
     }
 
     private String getPlotPrompt(PlotDto plotDto) {
@@ -258,13 +273,13 @@ public class FairyServiceImpl implements FairyService {
 
     private TemporaryFairy saveTemporary(ScenarioDto scenarioDto) {
         FairyInfo fairyInfo = FairyInfo.builder()
-                .member(findMember(SecurityUtils.getCurrentMemberId()))
                 .plot(scenarioDto.getPlot())
                 .title(scenarioDto.getTitle())
                 .build();
 
         TemporaryFairy temporaryFairy = TemporaryFairy.builder()
                 .fairyInfo(fairyInfo)
+                .member(findMember(SecurityUtils.getCurrentMemberId()))
                 .build();
         TemporaryFairy savedFairy = temporaryFairyRepository.save(temporaryFairy);
 
@@ -278,13 +293,11 @@ public class FairyServiceImpl implements FairyService {
     }
 
     private Fairy saveFairyEntity(FairySaveFormDto saveFormDto) {
-        Optional<Member> member = memberRepository.findByMemberId(SecurityUtils.getCurrentMemberId());
         FairyInfo fairyInfo = FairyInfo.builder()
                 .title(saveFormDto.getTitle())
                 .plot(saveFormDto.getPlot())
-                .member(member.get())
                 .build();
-        Fairy fairy = Fairy.builder().fairyInfo(fairyInfo).build();
+        Fairy fairy = Fairy.builder().fairyInfo(fairyInfo).member(findMember(SecurityUtils.getCurrentMemberId())).build();
         return fairyRepository.save(fairy);
     }
 }

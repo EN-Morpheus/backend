@@ -68,7 +68,7 @@ public class FairyController {
     }
 
     @Operation(summary = "임시 저장 데이터 삭제")
-    @DeleteMapping("temporary/delete")
+    @DeleteMapping("/temporary/delete")
     public ResponseEntity deleteTemporary(@RequestParam("temporaryFairyId") Long temporaryFairyId) {
         try {
             chapterservice.deleteChapter(temporaryFairyId);
@@ -83,15 +83,25 @@ public class FairyController {
     }
 
     @Operation(summary = "동화 저장")
-    @PostMapping("save")
+    @PostMapping("/save")
     public ResponseEntity saveFairy(@RequestBody FairySaveFormDto fairySaveFormDto) {
         return fairyService.saveFairy(fairySaveFormDto);
     }
 
-    @Operation(summary = "내가 제작한 동화 조회")
-    @GetMapping("lookup")
-    public ResponseEntity lookupMyFairies(){
+    @Operation(summary = "내가 제작한 동화들 조회")
+    @GetMapping("/lookup")
+    public ResponseEntity lookupMyFairies() {
         return fairyService.lookupMyFairy();
+    }
+
+    @Operation(summary = "내가 제작한 동화 선택")
+    @GetMapping("/choose")
+    public ResponseEntity chooseFairy(@RequestParam("fairyId") Long fairyId) {
+        try {
+            return ResponseHandler.create200Response(new Response(), fairyService.chooseFairy(fairyId));
+        } catch (IllegalArgumentException e) {
+            return ResponseHandler.create404Error(new Response(), e);
+        }
     }
 
 }

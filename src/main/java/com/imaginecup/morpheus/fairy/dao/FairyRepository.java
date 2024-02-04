@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface FairyRepository extends JpaRepository<Fairy, Long> {
 
-    List<Fairy> findByMemberId(String memberId);
+    List<Fairy> findByMemberMemberId(String memberId);
 
 }

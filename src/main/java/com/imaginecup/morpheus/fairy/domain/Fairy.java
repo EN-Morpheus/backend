@@ -23,6 +23,10 @@ public class Fairy {
     @ColumnDefault("true")
     private boolean isPublic;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @Embedded
     private FairyInfo fairyInfo;
 

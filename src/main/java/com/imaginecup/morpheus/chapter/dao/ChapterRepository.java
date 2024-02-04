@@ -8,5 +8,6 @@ import java.util.List;
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
     List<Chapter> findByTemporaryFairyId(Long temporaryId);
+    List<Chapter> findByFairyId(Long fairyId);
 
 }
